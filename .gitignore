@@ -1,0 +1,16 @@
+# --- Confidential client material — never publish ---
+/previous_works/
+/feedback.md
+
+# Generated letter outputs
+/out/
+
+# Local virtualenv
+/.venv/
+
+# Local Claude config
+/.claude/
+
+# Python caches
+__pycache__/
+*.pyc
