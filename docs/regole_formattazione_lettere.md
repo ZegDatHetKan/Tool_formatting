@@ -257,6 +257,8 @@ Applicate a **ogni** run emesso:
 
 Il formatter segnala (non blocca) quando:
 - restano **placeholder** non risolti: `[DA INSERIRE…]`, `[DATA…]`, `[…]`;
+- la **data è assente**: lo script scrive comunque `[INSERISCI QUI LA DATA]`
+  nella posizione della data e segnala l'omissione;
 - un blocco **obbligatorio** è vuoto: destinatario, oggetto o firma assenti;
 - residua un **en/em dash** dopo la normalizzazione (indice di bug a monte);
 - il contenuto contiene marcatori di divisore decorativo non rimossi.

@@ -48,6 +48,10 @@ LIST_INDENT_CM = 0.5           # default; corpus uses 0.5–1.0
 
 DEFAULT_TEMPLATE = "assets/Template_Vuoto.docx"
 
+# Written in the date position when no date is supplied, so the slot is always
+# present and the review path flags it (see collect_warnings).
+DATE_PLACEHOLDER = "[INSERISCI QUI LA DATA]"
+
 _AL = WD_ALIGN_PARAGRAPH
 
 # Tokens that mean "a human still has to fill this in".
@@ -327,9 +331,9 @@ def _emit_delivery(document: Document, letter: LetterDocument) -> None:
     )
 
 
-def _emit_date(document: Document, letter: LetterDocument) -> None:
+def _emit_date(document: Document, line) -> None:
     _add_paragraph(
-        document, letter.date_place,
+        document, line,
         align=_AL.RIGHT, size=SIZE_BODY, space_before=6, space_after=10,
     )
 
@@ -544,6 +548,10 @@ def collect_warnings(letter: LetterDocument) -> list[str]:
         warnings.append("subject vuoto (blocco obbligatorio).")
     if not letter.signature_block:
         warnings.append("signature_block vuoto (blocco obbligatorio).")
+    if letter.date_place is None or not _plain(letter.date_place).strip():
+        warnings.append(
+            f"Data assente: inserire la data al posto di {DATE_PLACEHOLDER}."
+        )
 
     # Gather all text actually destined to the document.
     texts: list[str] = []
@@ -603,13 +611,17 @@ def render_letter(
     if letter.delivery_method is not None and not letter.delivery_inline_with_recipient:
         _emit_delivery(document, letter)
 
-    if letter.date_place is not None and letter.date_above_recipient:
-        _emit_date(document, letter)
+    # The date is ALWAYS emitted; when missing it is filled with a placeholder
+    # so the slot exists and the review path (collect_warnings) flags it.
+    date_line = letter.date_place
+    if date_line is None or not _plain(date_line).strip():
+        date_line = DATE_PLACEHOLDER
 
+    if letter.date_above_recipient:
+        _emit_date(document, date_line)
     _emit_recipient(document, letter)
-
-    if letter.date_place is not None and not letter.date_above_recipient:
-        _emit_date(document, letter)
+    if not letter.date_above_recipient:
+        _emit_date(document, date_line)
 
     # --- subject / opening (opening is optional: formal istanze have none) ---
     _emit_subject(document, letter)

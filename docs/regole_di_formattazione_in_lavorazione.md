@@ -28,6 +28,7 @@ rientri, spaziature, condizioni) corrisponde **1:1** a una riga di codice.
 | `RECIPIENT_INDENT_CM` | `8.5` cm | rientro sinistro blocco destinatario |
 | `LIST_INDENT_CM` | `0.5` cm | rientro sinistro voci di elenco e allegati |
 | `DEFAULT_TEMPLATE` | `assets/Template_Vuoto.docx` | template di base |
+| `DATE_PLACEHOLDER` | `[INSERISCI QUI LA DATA]` | scritto al posto della data quando manca |
 
 ## 2. Eredità dal template (`render_letter` → `_clear_body`)
 
@@ -39,9 +40,9 @@ e si ricompone. Restano intatti: `sectPr` (formato pagina A4, margini — superi
 ## 3. Ordine di emissione (`render_letter`)
 
 1. `delivery_method` — solo se valorizzato **e** `delivery_inline_with_recipient == False`;
-2. `date_place` — solo se valorizzato **e** `date_above_recipient == True`;
+2. `date_place` — **sempre emessa**; se assente/vuota viene scritto `DATE_PLACEHOLDER`. Posizione: sopra il destinatario se `date_above_recipient == True`;
 3. `recipient_block`;
-4. `date_place` — solo se valorizzato **e** `date_above_recipient == False`;
+4. `date_place` — se `date_above_recipient == False`, la data (o il placeholder) va qui invece che al punto 2;
 5. `subject` (OGGETTO);
 6. `opening` — solo se il testo, una volta appiattito, **non è vuoto** (le istanze formali ne sono prive);
 7. `body_blocks`;
@@ -58,7 +59,7 @@ La cartella di output viene creata se non esiste; il file non finisce mai in
 | Blocco / funzione | Allin. | Size | Grassetto | Corsivo | Rientro sx | Sp. prima | Sp. dopo | keep_with_next |
 |-------------------|--------|------|-----------|---------|------------|-----------|----------|----------------|
 | `delivery_method` (autonomo) — `_emit_delivery` | LEFT | 12 | honor span | **sì (forzato)** | — | — | 8 | no |
-| `date_place` — `_emit_date` | RIGHT | 12 | honor span | honor span | — | 6 | 10 | no |
+| `date_place` — `_emit_date` (sempre; placeholder se mancante) | RIGHT | 12 | honor span | honor span | — | 6 | 10 | no |
 | `recipient_block` riga — `_emit_recipient` | LEFT | 12 | honor span | honor span | **8.5** | — | 2 (8 sull'ultima riga) | no |
 | OGGETTO **inline** (default) — `_emit_subject` | JUSTIFY¹ | label 16 / testo 12 | **sì** | honor span sul testo² | — | 8 | 8 | no |
 | OGGETTO **split** label — `_emit_subject` | CENTER³ | 16 | **sì** | no | — | 10 | 4 | **sì** |
@@ -144,6 +145,7 @@ Controlli **di forma** (non di merito giuridico). `RenderResult.needs_review`
 - `recipient_block` vuoto;
 - `subject` vuoto;
 - `signature_block` vuoto;
+- **data assente** (`date_place` None/vuoto): in resa compare `DATE_PLACEHOLDER`;
 - placeholder non risolti che combaciano con `[... DA INSERIRE | DATA | INSERIRE | ... | … ...]` (case-insensitive);
 - en/em dash residuo **dopo** normalizzazione (difensivo: indica una variante non coperta da `normalize_text`);
 - divisore decorativo `***` presente (verrà comunque rimosso in resa).
