@@ -25,6 +25,7 @@
   .dot{width:11px;height:11px;border-radius:3px;background:rgb(var(--c));flex:0 0 auto}
   .ntitle{font-weight:600;font-size:12.5px}
   .tag{font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;color:rgb(var(--c));margin-left:auto}
+  .opt{font-size:9px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);border:1px dashed #b3bcca;border-radius:999px;padding:0 6px;white-space:nowrap}
   .nsum{font-size:11px;color:var(--muted);margin-top:3px}
   .ndet{max-height:0;overflow:hidden;transition:max-height .2s ease;font-size:11px}
   .note:hover .ndet,.note:focus .ndet,.note.on .ndet{max-height:340px;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}
@@ -38,7 +39,7 @@
   @media print{body{background:#fff} #wires path{opacity:.5} .ndet{max-height:none!important;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px} .note{box-shadow:none}}
 </style></head>
 <body>
-<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, <b>pagina unica</b>. Ogni sezione ha un colore permanente; passando il mouse (sulla lettera o sulla scheda) sezione e scheda si intensificano e la linea le collega. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
+<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, <b>pagina unica</b>. <b>Passa il mouse</b> per un'anteprima, <b>clicca</b> una sezione o una scheda per <b>fissarla</b> (più sezioni restano aperte; riclicca per chiudere). Il segno <span class="opt">opzionale</span> indica i blocchi resi solo se forniti. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
 <div class="stage">
   <div class="board" id="board">
     <svg id="wires"></svg>
@@ -71,12 +72,12 @@
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Template (non generato)</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>14 pt / 16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine sup. 5.91 cm</dd></dl><div class="hint">Carta intestata ereditata dal template; il corpo non la duplica.</div></div>
       </div>
       <div class="note" data-k="delivery" tabindex="0" style="--c:202,138,4">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Metodo di trasmissione</span></div>
+        <div class="nhd"><span class="dot"></span><span class="ntitle">Metodo di trasmissione</span> <span class="opt" title="Opzionale: resa solo se fornita, altrimenti omessa">opzionale</span></div>
         <div class="nsum">sinistra, 12 pt, corsivo.</div>
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Reso solo se fornito. Può anche essere la prima riga del destinatario.</div></div>
       </div>
       <div class="note" data-k="date" tabindex="0" style="--c:13,148,136">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Data e luogo</span></div>
+        <div class="nhd"><span class="dot"></span><span class="ntitle">Data e luogo</span> <span class="opt" title="Opzionale: resa solo se fornita, altrimenti omessa">opzionale</span></div>
         <div class="nsum">destra, 12 pt.</div>
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 6 / dopo 10 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Resa solo se fornita; lo script non inventa una data assente.</div></div>
       </div>
@@ -96,7 +97,7 @@
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">La contestazione su 027 era il contenuto centrato invece che giustificato: ora è giustificato.</div></div>
       </div>
       <div class="note" data-k="opening" tabindex="0" style="--c:22,163,74">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Apertura (saluto)</span></div>
+        <div class="nhd"><span class="dot"></span><span class="ntitle">Apertura (saluto)</span> <span class="opt" title="Opzionale: resa solo se fornita, altrimenti omessa">opzionale</span></div>
         <div class="nsum">giustificato, 12 pt, grassetto.</div>
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 8 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Formale → grassetto + giustificato; e-mail → tondo + sinistra. Reso solo se fornito.</div></div>
       </div>
@@ -121,7 +122,7 @@
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Rientro sx</dt><dd>0.5 cm</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Marcatore ((i)/(a)/•) incluso nel testo.</div></div>
       </div>
       <div class="note" data-k="closing" tabindex="0" style="--c:101,163,13">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Congedo</span></div>
+        <div class="nhd"><span class="dot"></span><span class="ntitle">Congedo</span> <span class="opt" title="Opzionale: resa solo se fornita, altrimenti omessa">opzionale</span></div>
         <div class="nsum">destra, 12 pt.</div>
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Stesso lato della firma (destra).</div></div>
       </div>
@@ -131,12 +132,12 @@
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 18 / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Nomi firmatari in grassetto; “(Firma digitale)” in corsivo; spaziatura ariosa — da approvare.</div></div>
       </div>
       <div class="note" data-k="attach" tabindex="0" style="--c:162,28,175">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Allegati</span></div>
+        <div class="nhd"><span class="dot"></span><span class="ntitle">Allegati</span> <span class="opt" title="Opzionale: resa solo se fornita, altrimenti omessa">opzionale</span></div>
         <div class="nsum">sinistra, 12 pt, grassetto.</div>
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">“Allegati:” in grassetto; voci rientrate.</div></div>
       </div>
       <div class="note" data-k="post" tabindex="0" style="--c:71,85,105">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Postilla / disclaimer</span></div>
+        <div class="nhd"><span class="dot"></span><span class="ntitle">Postilla / disclaimer</span> <span class="opt" title="Opzionale: resa solo se fornita, altrimenti omessa">opzionale</span></div>
         <div class="nsum">destra, 10 pt, corsivo.</div>
         <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 4 / dopo 0 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Piccola, in corsivo.</div></div>
       </div>
@@ -152,7 +153,14 @@
 (function(){
   function all(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
   var board=document.getElementById('board'), wires=document.getElementById('wires'), img=document.getElementById('page');
+  var pinned={}, hovered=null;                 // pinned = click-fixed; hovered = transient
   function anchor(k){return document.getElementById('anc-'+k);}
+  function isOn(k){return !!pinned[k] || hovered===k;}
+  function apply(){                              // reflect state on regions, cards and lines
+    all('.note').forEach(function(n){n.classList.toggle('on',isOn(n.getAttribute('data-k')));});
+    all('.rg').forEach(function(e){e.classList.toggle('on',isOn(e.getAttribute('data-k')));});
+    all('#wires path').forEach(function(p){p.classList.toggle('on',isOn(p.getAttribute('data-k')));});
+  }
   function draw(){
     if(window.innerWidth<=1040){ wires.innerHTML=''; return; }
     var br=board.getBoundingClientRect();
@@ -166,21 +174,16 @@
       var mx=(x1+x2)/2, c=getComputedStyle(n).getPropertyValue('--c').trim();
       s+='<path data-k="'+k+'" d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" stroke="rgb('+c+')"></path>';
     });
-    wires.innerHTML=s;
+    wires.innerHTML=s; apply();                   // KEY FIX: re-apply highlight after rebuild
   }
-  function setOn(k,on){
-    all('.rg[data-k="'+k+'"]').forEach(function(e){e.classList.toggle('on',on);});
-    all('.note[data-k="'+k+'"]').forEach(function(e){e.classList.toggle('on',on);});
-    all('#wires path[data-k="'+k+'"]').forEach(function(e){e.classList.toggle('on',on);});
-  }
+  function later(){ setTimeout(draw,220); }      // after a card-expand transition
   function wire(el){var k=el.getAttribute('data-k');
-    el.addEventListener('mouseenter',function(){setOn(k,true);});
-    el.addEventListener('mouseleave',function(){setOn(k,false);});
-    el.addEventListener('focus',function(){setOn(k,true);});
-    el.addEventListener('blur',function(){setOn(k,false);});
-    // card expansion changes geometry -> redraw after the transition
-    el.addEventListener('mouseenter',function(){setTimeout(draw,210);});
-    el.addEventListener('mouseleave',function(){setTimeout(draw,210);});
+    el.addEventListener('mouseenter',function(){hovered=k; apply(); draw(); later();});
+    el.addEventListener('mouseleave',function(){hovered=null; apply(); later();});
+    el.addEventListener('focus',function(){hovered=k; apply(); draw(); later();});
+    el.addEventListener('blur',function(){hovered=null; apply(); later();});
+    el.addEventListener('click',function(e){e.stopPropagation(); pinned[k]=!pinned[k]; apply(); draw(); later();});
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault(); pinned[k]=!pinned[k]; apply(); draw(); later();}});
   }
   all('.rg').forEach(wire); all('.note').forEach(wire);
   function redraw(){requestAnimationFrame(draw);}

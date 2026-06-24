@@ -260,11 +260,14 @@ for idx,r in enumerate(regions):
 order_seen=[];
 for r in regions:
     if r["k"] not in order_seen: order_seen.append(r["k"])
+# sections rendered ONLY if the author supplies them (otherwise omitted)
+OPTIONAL={"delivery","date","opening","closing","attach","post"}
 notes_html=[]
 for k in order_seen:
     tag=f'<span class="tag">{TAG[k]}</span>' if k in TAG else ""
+    opt=' <span class="opt" title="Opzionale: resa solo se fornita, altrimenti omessa">opzionale</span>' if k in OPTIONAL else ""
     notes_html.append(f'''      <div class="note" data-k="{k}" tabindex="0" style="--c:{col(k)}">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">{LABEL[k]}</span>{tag}</div>
+        <div class="nhd"><span class="dot"></span><span class="ntitle">{LABEL[k]}</span>{opt}{tag}</div>
         <div class="nsum">{summary(k)}</div>
         <div class="ndet">{details(k)}</div>
       </div>''')
@@ -297,6 +300,7 @@ PAGE=f"""<!DOCTYPE html>
   .dot{{width:11px;height:11px;border-radius:3px;background:rgb(var(--c));flex:0 0 auto}}
   .ntitle{{font-weight:600;font-size:12.5px}}
   .tag{{font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;color:rgb(var(--c));margin-left:auto}}
+  .opt{{font-size:9px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);border:1px dashed #b3bcca;border-radius:999px;padding:0 6px;white-space:nowrap}}
   .nsum{{font-size:11px;color:var(--muted);margin-top:3px}}
   .ndet{{max-height:0;overflow:hidden;transition:max-height .2s ease;font-size:11px}}
   .note:hover .ndet,.note:focus .ndet,.note.on .ndet{{max-height:340px;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}}
@@ -310,7 +314,7 @@ PAGE=f"""<!DOCTYPE html>
   @media print{{body{{background:#fff}} #wires path{{opacity:.5}} .ndet{{max-height:none!important;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}} .note{{box-shadow:none}}}}
 </style></head>
 <body>
-<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, <b>pagina unica</b>. Ogni sezione ha un colore permanente; passando il mouse (sulla lettera o sulla scheda) sezione e scheda si intensificano e la linea le collega. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
+<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, <b>pagina unica</b>. <b>Passa il mouse</b> per un'anteprima, <b>clicca</b> una sezione o una scheda per <b>fissarla</b> (più sezioni restano aperte; riclicca per chiudere). Il segno <span class="opt">opzionale</span> indica i blocchi resi solo se forniti. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
 <div class="stage">
   <div class="board" id="board">
     <svg id="wires"></svg>
@@ -327,7 +331,14 @@ PAGE=f"""<!DOCTYPE html>
 (function(){{
   function all(s){{return Array.prototype.slice.call(document.querySelectorAll(s));}}
   var board=document.getElementById('board'), wires=document.getElementById('wires'), img=document.getElementById('page');
+  var pinned={{}}, hovered=null;                 // pinned = click-fixed; hovered = transient
   function anchor(k){{return document.getElementById('anc-'+k);}}
+  function isOn(k){{return !!pinned[k] || hovered===k;}}
+  function apply(){{                              // reflect state on regions, cards and lines
+    all('.note').forEach(function(n){{n.classList.toggle('on',isOn(n.getAttribute('data-k')));}});
+    all('.rg').forEach(function(e){{e.classList.toggle('on',isOn(e.getAttribute('data-k')));}});
+    all('#wires path').forEach(function(p){{p.classList.toggle('on',isOn(p.getAttribute('data-k')));}});
+  }}
   function draw(){{
     if(window.innerWidth<=1040){{ wires.innerHTML=''; return; }}
     var br=board.getBoundingClientRect();
@@ -341,21 +352,16 @@ PAGE=f"""<!DOCTYPE html>
       var mx=(x1+x2)/2, c=getComputedStyle(n).getPropertyValue('--c').trim();
       s+='<path data-k="'+k+'" d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" stroke="rgb('+c+')"></path>';
     }});
-    wires.innerHTML=s;
+    wires.innerHTML=s; apply();                   // KEY FIX: re-apply highlight after rebuild
   }}
-  function setOn(k,on){{
-    all('.rg[data-k="'+k+'"]').forEach(function(e){{e.classList.toggle('on',on);}});
-    all('.note[data-k="'+k+'"]').forEach(function(e){{e.classList.toggle('on',on);}});
-    all('#wires path[data-k="'+k+'"]').forEach(function(e){{e.classList.toggle('on',on);}});
-  }}
+  function later(){{ setTimeout(draw,220); }}      // after a card-expand transition
   function wire(el){{var k=el.getAttribute('data-k');
-    el.addEventListener('mouseenter',function(){{setOn(k,true);}});
-    el.addEventListener('mouseleave',function(){{setOn(k,false);}});
-    el.addEventListener('focus',function(){{setOn(k,true);}});
-    el.addEventListener('blur',function(){{setOn(k,false);}});
-    // card expansion changes geometry -> redraw after the transition
-    el.addEventListener('mouseenter',function(){{setTimeout(draw,210);}});
-    el.addEventListener('mouseleave',function(){{setTimeout(draw,210);}});
+    el.addEventListener('mouseenter',function(){{hovered=k; apply(); draw(); later();}});
+    el.addEventListener('mouseleave',function(){{hovered=null; apply(); later();}});
+    el.addEventListener('focus',function(){{hovered=k; apply(); draw(); later();}});
+    el.addEventListener('blur',function(){{hovered=null; apply(); later();}});
+    el.addEventListener('click',function(e){{e.stopPropagation(); pinned[k]=!pinned[k]; apply(); draw(); later();}});
+    el.addEventListener('keydown',function(e){{if(e.key==='Enter'||e.key===' '){{e.preventDefault(); pinned[k]=!pinned[k]; apply(); draw(); later();}}}});
   }}
   all('.rg').forEach(wire); all('.note').forEach(wire);
   function redraw(){{requestAnimationFrame(draw);}}
