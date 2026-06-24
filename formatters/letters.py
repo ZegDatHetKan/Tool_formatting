@@ -58,7 +58,7 @@ _COURTESY_APPELLATIVES = {
     "preg.mo", "preg.ma", "pregiatissimo", "pregiatissima",
     "gent.mo", "gent.ma", "gentile", "gentilissimo", "gentilissima",
     "ill.mo", "ill.ma", "illustrissimo", "illustrissima",
-    "chiar.mo", "chiar.ma", "spett.",
+    "chiar.mo", "chiar.ma",
 }
 
 
@@ -533,7 +533,9 @@ def collect_warnings(letter: LetterDocument) -> list[str]:
         warnings.append(
             "Placeholder non risolti da completare: " + ", ".join(placeholders)
         )
-    if "–" in joined or "—" in joined:
+    # Check AFTER normalization: render normalizes en/em dash, so a residual
+    # here means a dash variant normalize_text does not yet cover (defensive).
+    if "–" in normalize_text(joined) or "—" in normalize_text(joined):
         warnings.append("Residuo en/em dash dopo la normalizzazione.")
     for t in texts:
         if _DIVIDER_RE.match(t):
@@ -574,9 +576,10 @@ def render_letter(
     if letter.date_place is not None and not letter.date_above_recipient:
         _emit_date(document, letter)
 
-    # --- subject / opening ---
+    # --- subject / opening (opening is optional: formal istanze have none) ---
     _emit_subject(document, letter)
-    _emit_opening(document, letter)
+    if _plain(letter.opening).strip():
+        _emit_opening(document, letter)
 
     # --- body ---
     _emit_body(document, letter)
