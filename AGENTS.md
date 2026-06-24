@@ -2,36 +2,47 @@
 
 ## Project boundary
 
-This repository is only for the letter formatter restart. Treat the historical
-corpus as read-only evidence and the new formatter as production code.
+This workspace contains a legal document formatter and the artifacts used to
+reach client agreement on formatting rules.
+
+Current work is **Phase 2: client-facing HTML format review**.
 
 ## Source of truth
 
-- Corpus classification: `previous_works/manifest.json`.
-- Template: `assets/Template_Vuoto.docx`.
-- Target family for this task: `letters` only.
-- Reference layout: historical `previous_works/output_*.docx` for letters.
+- Current implemented style values:
+  `docs/regole_di_formattazione_in_lavorazione.md`
+- Rationale and corpus evidence:
+  `docs/regole_formattazione_lettere.md`
+- Client feedback and sensitivities:
+  `feedback.md`
+- Formatter implementation:
+  `formatters/letters.py`
+- Historical corpus:
+  `previous_works/` read-only
 
 ## Engineering principles
 
-- Prefer deterministic Python over AI-generated layout.
-- Separate semantic extraction from DOCX composition.
-- Store formatting decisions in code, not prompts.
-- Keep all generated outputs outside `previous_works/`.
-- Use reports as clues, not as a substitute for inspecting DOCX structure.
-- Add concise tests or validation scripts where they materially reduce risk.
+- Build deterministic artifacts. Prefer a repeatable script over hand-editing a
+  large HTML file if generation reduces drift.
+- Keep style facts synchronized with the Python formatter and rules docs.
+- Make visual explanations concrete: show actual colored sections on a letter,
+  not abstract prose.
+- Do not expose real client data. Use fictional legal-letter content.
+- Put generated outputs under `out/`.
+- Keep historical material untouched.
 
 ## Required deliverables
 
-- `docs/regole_formattazione_lettere.md`
-- `formatters/letters.py`
-- A small example or validation command that shows the formatter can create a
-  DOCX from replacement section content.
-- A short run report describing which corpus letters were inspected and what
-  remains uncertain.
+- `out/html/lettera_fittizia_review.html`
+- `out/html/lettera_fittizia_review_report.md`
+
+The report must say which docs/code were used as sources, what the HTML shows,
+and what the client still needs to approve.
 
 ## Quality bar
 
-The formatter is successful only if a future developer can create a new letter
-by changing semantic content fields without rewriting layout logic.
+The artifact is successful only if it can be sent to the client as a precise
+format-consensus tool: every visible section has a matching legend item, and
+every legend item exposes the formatting details needed to approve or contest
+that section.
 

@@ -1,42 +1,26 @@
-# Letter Formatter Goal
+# Phase 1 Archive — Letter Formatter Goal
 
-## Goal
-
-Infer the stable structure of Bergamo Legal letters from historical examples and
+Phase 1 objective was to infer the stable structure of Bergamo Legal letters and
 turn it into a reusable deterministic formatter.
 
-The formatter must compose letters from semantic content such as date, delivery
-method, recipient, subject, opening, body sections, closing, signature, and
-attachments. A user should be able to replace those fields and receive a
-properly formatted DOCX using the same layout.
+That objective is now complete. The current working objective is Phase 2:
+`docs/client_format_review_goal.md`.
 
-## Corpus scope
+Keep this file as historical context only. Do not use it as the active task
+brief.
 
-Use `previous_works/manifest.json` to identify the letter records. At the time
-of this setup, the manifest contains the letter family among 32 historical jobs.
-The first implementation must ignore non-letter records.
+## Phase 1 outputs
 
-Important: the manifest is the classification source of truth. Do not use a
-separate copied planning list as a second classification source.
+- `docs/regole_formattazione_lettere.md`
+- `docs/regole_di_formattazione_in_lavorazione.md`
+- `formatters/letters.py`
+- `validate_letters.py`
+- `docs/report_esecuzione_lettere.md`
 
-## What to infer
+## Still relevant
 
-For every letter example, inspect:
-
-- page setup inherited from `assets/Template_Vuoto.docx`;
-- whether body text duplicates or omits letterhead material;
-- paragraph order and block boundaries;
-- fonts, sizes, bold/italic usage, alignment, indentation, spacing;
-- handling of `Oggetto`;
-- recipient block placement;
-- numbered lists and lettered lists;
-- closings, signatures, and attachments;
-- recurring placeholders and review warnings.
-
-## What not to infer
-
-Do not infer rules for acts, mediation documents, ricorsi, memorie, querele, or
-the third pending family. They can be documented as out of scope if encountered.
-
-Do not infer legal content edits. This task is about structure and formatting.
+- The project remains letter-only for now.
+- `previous_works/manifest.json` remains the corpus source of truth.
+- `previous_works/` remains read-only.
+- Legal content must not be edited by formatting tools.
 

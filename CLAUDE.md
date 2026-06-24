@@ -2,53 +2,58 @@
 
 You are working in `/home/giulio/code/LexForward/moduli/formatter`.
 
-This is a clean restart. Do not rely on previous failed implementation choices.
-The useful artifacts are:
+## Role
 
-- `previous_works/manifest.json`
-- `previous_works/input_*.docx`
-- `previous_works/output_*.docx`
-- `previous_works/report_*.md`
-- `previous_works/verification_*.md`
-- `assets/Template_Vuoto.docx`
+Act as a senior legal-document automation engineer working for Bergamo Legal.
+Your client is a law firm that needs to approve formatting rules before the
+formatter is treated as final. Your job is to turn technical formatting rules
+into a precise, client-readable visual review artifact.
 
-## Mission
+You are not designing a landing page. You are preparing a consent tool.
 
-Derive a robust, reusable Python formatter for Bergamo Legal letters.
+## Current phase
 
-The final result must include:
+Phase 1 is complete: the letter rules and deterministic Python formatter already
+exist.
 
-1. A written Markdown document explaining the formatting rules for letters.
-2. A deterministic Python script that reproduces the letter structure by filling
-   predefined semantic sections and paragraphs.
+Phase 2 objective: build a static HTML page with a fictional letter and a visual
+legend that lets the client inspect every formatting decision.
 
-## Working order
+## Read in this order
 
-1. Read `AGENTS.md`.
-2. Read `docs/letter_formatter_goal.md`.
-3. Read `docs/letters_formatter_deliverables.md`.
-4. Read `previous_works/manifest.json`.
-5. Select only manifest records with `document_type == "letters"`.
-6. Inspect the matching input/output/report/verification files.
-7. Infer the shared letter skeleton and the variation points.
-8. Write the rules document.
-9. Implement the Python formatter.
-10. Validate it on representative letters from the corpus.
+1. `AGENTS.md`
+2. `docs/client_format_review_goal.md`
+3. `docs/html_review_artifact_spec.md`
+4. `docs/client_approval_points.md`
+5. `docs/regole_di_formattazione_in_lavorazione.md`
+6. `docs/regole_formattazione_lettere.md`
+7. `feedback.md`
+8. `formatters/letters.py`
+
+## Deliverables for this phase
+
+- `out/html/lettera_fittizia_review.html`
+- `out/html/lettera_fittizia_review_report.md`
+
+If you need helper scripts to generate the HTML deterministically, place them in
+`tool/scripts/` and keep outputs in `out/html/`.
 
 ## Non-negotiable constraints
 
-- Do not modify files inside `previous_works/`.
+- Do not modify `previous_works/`.
 - Do not modify `assets/Template_Vuoto.docx`.
-- Do not implement `acts` or `other_pending_name`.
-- Do not build an AI-heavy formatter.
-- Do not hardcode one historical letter as the solution.
-- Do not use output reports as proof if the generated DOCX has not been opened
-  or inspected programmatically.
+- Do not rewrite the letter formatter unless the HTML work exposes a clear doc
+  mismatch; if that happens, report it instead of silently changing behavior.
+- Do not invent new formatting rules. Show the rules that currently exist.
+- Do not include real client/confidential content in the fictional letter.
+- Do not make a marketing page, dashboard, or generic documentation page.
+- The HTML must be understandable when opened directly in a browser.
 
-## Expected implementation direction
+## Quality bar
 
-Use `python-docx` unless a better local dependency already exists. Open
-`assets/Template_Vuoto.docx`, preserve its header, footer, margins, and
-letterhead assets, clear only the empty body content, then append formatted
-paragraphs according to a semantic letter schema.
+The HTML succeeds only if a client can quickly answer:
 
+- What section of the letter am I looking at?
+- What formatting rules apply to that section?
+- Which formatting choices are fixed by the template?
+- Which choices still need approval or may change after feedback?
