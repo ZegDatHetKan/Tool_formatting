@@ -34,6 +34,18 @@ script (la lettera occupa 2 pagine per via dei margini ampi del template). Le
 bande colorate sono applicate **solo alla copia di revisione**; i deliverable
 puliti (`.docx`/`.pdf`) non hanno evidenziazioni.
 
+### Nota sui font del rendering
+
+Il DOCX dichiara i font reali: **Times New Roman** (corpo, come le lettere di
+output) e **Garamond** (intestazione, dal template). Sulla macchina di rendering
+questi font proprietari non sono installati, quindi per l'anteprima si usano i
+sostituti standard, installati nello spazio utente:
+- **Garamond → EB Garamond** (font libero OFL, equivalente aperto di Garamond);
+- **Times New Roman → Liberation Serif** (sostituto *metric-identico*, indistinguibile nel corpo).
+
+Aperto in Word con i font proprietari installati, il documento appare nel font
+nominale. La sostituzione riguarda solo l'immagine di anteprima, non il `.docx`.
+
 ## File prodotti
 
 - `out/lettera_fittizia.docx` — lettera fittizia **formattata dal tool** (pulita).
