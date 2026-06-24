@@ -11,6 +11,10 @@ classificazione**. Sono stati analizzati esclusivamente i record con
 
 ## Fonte di verità e correzioni ad-hoc
 
+> Per lo **specchio 1:1 dei valori applicati dal codice** (font, dimensioni,
+> spaziature, condizioni) vedi `docs/regole_di_formattazione_in_lavorazione.md`.
+> Questo documento spiega invece il *perché* (corpus, feedback, incertezze).
+
 Lo **script Python `formatters/letters.py` è la fonte di verità** della
 formattazione: ogni regola di stile vive nel codice, non in patch manuali. I
 documenti si producono **sempre** facendo passare il contenuto semantico
