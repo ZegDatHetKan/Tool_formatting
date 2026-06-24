@@ -173,20 +173,19 @@ Elenco di righe, **LEFT con rientro sinistro 8.5 cm**. Tipicamente: appellativo
 > (`merge_courtesy_appellative=True`).
 
 ### 4.4 `subject` — OGGETTO (STYLE_008)
-Due varianti, entrambe presenti nel corpus:
-- **inline** (default): "OGGETTO: <testo>" in un unico paragrafo **JUSTIFY**, run
-  label 16 pt bold + run contenuto 12 pt bold (`001`,`005`,`025`,`029`,`032`);
-- **split**: "OGGETTO:" CENTER 16 pt bold (con `keep_with_next`) seguito da un
-  paragrafo contenuto 12 pt bold (`003`,`007`,`010`,`013`,`027`,`028`).
+Regola stabile: **label 16 pt bold, contenuto 12 pt bold**. Due varianti:
+- **split** (default): "OGGETTO:" **CENTER** 16 pt bold (con `keep_with_next`)
+  seguito, **a capo**, dal contenuto **JUSTIFY** 12 pt bold
+  (`003`,`007`,`010`,`013`,`027`,`028`);
+- **inline** (opzione): "OGGETTO: <testo>" in un unico paragrafo JUSTIFY, label
+  16 pt + contenuto 12 pt (`001`,`002`,`025`,`029`).
 
-Regola stabile: **label 16 pt bold, contenuto 12 pt bold**.
-
-> **Feedback cliente — 027 (4/5)**: il cliente chiede esplicitamente
-> «*oggetto: testo giustificato*» in un **unico paragrafo**, e contesta la forma
-> *split* + centrata usata in `output_027`. La forma inline+giustificata è
-> confermata dal riferimento **5/5 `025` ("dritto dritto")**, che usa proprio
-> `OGGETTO:` inline JUSTIFY. → **Default = inline, giustificato.** Lo *split*
-> resta disponibile come opzione.
+> **Feedback cliente — 027 (4/5)** + lettura del cliente: l'etichetta
+> `OGGETTO:` è un **titolo centrato 16 pt grassetto**; il **testo dell'oggetto va
+> a capo**, a sinistra/**giustificato**, 12 pt grassetto. La contestazione su
+> `output_027` era che il **contenuto** era *centrato* invece che *giustificato*.
+> → **Default = split, label centrata + contenuto giustificato.** Il corpus era
+> incoerente (4 lettere usavano l'inline); lo schema le uniforma tutte allo split.
 
 ### 4.5 `opening`
 Formula di apertura: "Egregio/a Consigliere/a,", "Spett.le Società,", "Egregia
@@ -271,7 +270,7 @@ Questi controlli sono di **forma**, non entrano nel merito giuridico
 |-----------|------------------|----------------|
 | Posizione `delivery_method` | riga autonoma alto / prima riga destinatario / dopo data | riga autonoma |
 | Posizione `date_place` | sopra o sotto il destinatario | sopra il destinatario |
-| OGGETTO | inline vs split; CENTER vs JUSTIFY | **inline, JUSTIFY** (feedback 027/025) |
+| OGGETTO | inline vs split; CENTER vs JUSTIFY | **split**: label CENTER 16 + contenuto JUSTIFY 12 (feedback 027) |
 | Appellativo personale | riga a sé vs mono-linea col nome | **mono-linea** (feedback 028) |
 | `opening` | bold+JUSTIFY (formale) vs tondo+LEFT (e-mail) | bold + JUSTIFY |
 | Rientro `list_item` | 0.5 / 0.7 / 1.0 cm | 0.5 cm |
@@ -279,10 +278,11 @@ Questi controlli sono di **forma**, non entrano nel merito giuridico
 ## 8. Incertezze — stato dopo il feedback cliente (`feedback.md`)
 
 ### Risolte dal feedback
-- ✅ **Forma dell'OGGETTO**: era incerta (split/center vs inline/justify); il
-  feedback `027` (4/5, richiesta esplicita di «oggetto: testo giustificato») e
-  il riferimento `025` (5/5) la fissano su **inline + JUSTIFY**. Default
-  aggiornato.
+- ✅ **Forma dell'OGGETTO**: chiarita con il cliente → **split**, etichetta
+  `OGGETTO:` **centrata** 16 pt grassetto, contenuto **a capo giustificato**
+  12 pt grassetto (la contestazione su `027` era sul contenuto *centrato* invece
+  che *giustificato*). Default aggiornato; le 4 lettere storiche inline sono
+  uniformate allo split.
 - ✅ **Appellativo personale nel destinatario**: il feedback `028` (4/5) chiede
   la **mono-linea** (`Egr. Sig.ra Nome`). Default aggiornato (con eccezione per
   "Spett.le" davanti a società).

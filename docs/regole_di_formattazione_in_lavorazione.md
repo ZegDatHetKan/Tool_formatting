@@ -64,9 +64,9 @@ La cartella di output viene creata se non esiste; il file non finisce mai in
 | `delivery_method` (autonomo) — `_emit_delivery` | LEFT | 12 | honor span | **sì (forzato)** | — | — | 8 | no |
 | `date_place` — `_emit_date` (solo se fornita) | RIGHT | 12 | honor span | honor span | — | 6 | 10 | no |
 | `recipient_block` riga — `_emit_recipient` | LEFT | 12 | honor span | honor span | **8.5** | — | 2 (8 sull'ultima riga) | no |
-| OGGETTO **inline** (default) — `_emit_subject` | JUSTIFY¹ | label 16 / testo 12 | **sì** | no² | — | 8 | 8 | no |
-| OGGETTO **split** label — `_emit_subject` | CENTER³ | 16 | **sì** | no | — | 10 | 4 | **sì** |
-| OGGETTO **split** contenuto — `_emit_subject` | CENTER³ | 12 | **sì** | no | — | — | 8 | no |
+| OGGETTO **split** label (default) — `_emit_subject` | CENTER³ | 16 | **sì** | no | — | 10 | 4 | **sì** |
+| OGGETTO **split** contenuto (default) — `_emit_subject` | JUSTIFY³ | 12 | **sì** | no | — | — | 8 | no |
+| OGGETTO **inline** (opzione) — `_emit_subject` | JUSTIFY¹ | label 16 / testo 12 | **sì** | no² | — | 8 | 8 | no |
 | `opening` — `_emit_opening` | JUSTIFY⁴ | 12 | sì se formale, altrim. honor⁴ | honor span | — | 8 | 6 | no |
 | corpo: **paragraph** — `_emit_body` | JUSTIFY | 12 | honor block | honor block | — | — | 6 | no |
 | corpo: **heading_center** (rituale) — `_emit_body` | CENTER | 16 | **sì** | no | — | 14 | 8 | **sì** |
@@ -83,8 +83,9 @@ Note:
 2. La **label** è ciò che precede il primo `:` (es. `OGGETTO:`, `Oggetto:`,
    `Subject:`): preservata verbatim a 16 pt, il resto a 12 pt. **Nessuna label
    viene inventata**: se il testo non ha `:`, tutto è reso a 12 pt grassetto.
-3. JUSTIFY se, rispettivamente, `subject_label_center == False` /
-   `subject_content_center == True`.
+3. Default split: **label CENTER** (`subject_label_center == True`) e
+   **contenuto JUSTIFY** (`subject_content_center == False`). Invertendo i flag:
+   label JUSTIFY se `False`, contenuto CENTER se `True`.
 4. LEFT e grassetto-honor se `opening_formal == False` (registro e-mail);
    JUSTIFY + grassetto forzato se `opening_formal == True` (registro formale).
 5. `block.indent_cm` se specificato sulla singola voce, altrimenti
@@ -142,9 +143,9 @@ blocchi annidate (prodotte da `disposition`) sono appiattite da `_flatten_blocks
 |-------|---------|---------|
 | `date_above_recipient` | `True` | data sopra il destinatario |
 | `delivery_inline_with_recipient` | `False` | metodo di trasmissione come riga autonoma in alto |
-| `subject_style` | `INLINE` | OGGETTO inline, giustificato (feedback 027/025) |
-| `subject_label_center` | `False` | (split) label OGGETTO non centrata |
-| `subject_content_center` | `False` | contenuto OGGETTO non centrato |
+| `subject_style` | `SPLIT` | `OGGETTO:` su riga propria + testo a capo (feedback 027) |
+| `subject_label_center` | `True` | label `OGGETTO:` **centrata** 16 pt |
+| `subject_content_center` | `False` | contenuto **giustificato** 12 pt |
 | `opening_formal` | `True` | apertura grassetto + JUSTIFY |
 | `list_indent_cm` | `0.5` | rientro voci di elenco |
 | `merge_courtesy_appellative` | `True` | unione appellativo personale + nome |

@@ -54,6 +54,12 @@ Conteggio OGGETTO nello **storico**: inline-giustificato 4 (001, 002, 025, 029);
 
 ## DUBBI APERTI (il feedback non li risolve del tutto)
 
+> **D1 — RISOLTO e implementato.** Resa decisa col cliente: etichetta `OGGETTO:`
+> **centrata 16 pt grassetto**, poi **a capo** il testo dell'oggetto a sinistra/
+> **giustificato 12 pt grassetto** (forma *split*). Applicata come default a
+> tutte le famiglie; le 4 lettere storiche che usavano l'inline sono uniformate.
+> L'etichetta è lasciata come scritta dall'autore (nessuna forzatura maiuscolo).
+
 ### D1 — OGGETTO inline-giustificato per TUTTE le famiglie di lettera?
 
 - **Dove sta il feedback:** `feedback.md`, riga
@@ -125,6 +131,5 @@ Conteggio OGGETTO nello **storico**: inline-giustificato 4 (001, 002, 025, 029);
 
 ## Nota
 
-Finché D1 e D2 non sono decisi, **non modifico lo script**: i default attuali
-restano quelli concordati (OGGETTO inline-giustificato; data forzata). Appena
-rispondi, applico le modifiche **nel formatter** e rigenero le lettere col tool.
+D1, D2 e D3 sono stati **decisi e implementati nel formatter** (vedi i riquadri
+in testa a ciascun dubbio). Le lettere si rigenerano col tool su questi default.

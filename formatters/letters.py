@@ -179,11 +179,13 @@ class LetterDocument:
     # --- variation points (see rules doc §7) ---
     date_above_recipient: bool = True
     delivery_inline_with_recipient: bool = False  # render as first recipient line
-    # Default INLINE + justified per client feedback on 027 ("oggetto: testo
-    # giustificato") confirmed by the 5/5 reference 025; SPLIT stays available.
-    subject_style: SubjectStyle = SubjectStyle.INLINE
-    subject_label_center: bool = False  # center the "OGGETTO:" label (split style)
-    subject_content_center: bool = False  # center the subject content
+    # Client reading of feedback 027: the "OGGETTO:" label is a CENTERED 16pt
+    # heading; the subject text goes on the NEXT line (a capo), LEFT/JUSTIFIED
+    # 12pt (the 027 complaint was that the content was centered, not justified).
+    # -> SPLIT, label centered, content justified.
+    subject_style: SubjectStyle = SubjectStyle.SPLIT
+    subject_label_center: bool = True   # "OGGETTO:" label centered (16pt)
+    subject_content_center: bool = False  # content JUSTIFIED on its own line (12pt)
     opening_formal: bool = True   # True -> bold + JUSTIFY; False -> plain + LEFT
     list_indent_cm: float = LIST_INDENT_CM
     # Merge a personal courtesy appellative (Egr., Preg.ma, ...) onto the same
