@@ -131,7 +131,7 @@ approvare”, “Punto sensibile”, “Ereditato dal template”, “Generato d
   **pagina unica continua** (niente taglio fra pagine).
 - **Tinte permanenti leggere** su ogni sezione della lettera, che si
   **intensificano** al passaggio del mouse/focus (sulla sezione o sulla scheda).
-- **Schede a fianco** allineate verticalmente alla sezione corrispondente;
+- **Schede a fianco** in colonna ordinata (in flusso, non si sovrappongono mai);
   riepilogo sempre visibile, dettagli completi che si espandono su hover/focus.
 - **Linee di collegamento permanenti e leggere** (nel colore della sezione) fra
   ogni sezione e la sua scheda; si rinforzano sull'elemento attivo.

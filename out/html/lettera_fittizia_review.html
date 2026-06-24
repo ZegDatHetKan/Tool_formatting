@@ -2,203 +2,171 @@
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revisione formattazione — Bergamo Legal (lettera fittizia)</title>
 <style>
-  :root{--ink:#1b2330;--muted:#65707f;--line:#e3e8ef;--bg:#eceff3;--paper:#fff}
+  :root{--ink:#1b2330;--muted:#65707f;--line:#e3e8ef;--bg:#eceff3}
   *{box-sizing:border-box} html,body{margin:0}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
   .strip{padding:10px 20px;border-bottom:1px solid var(--line);background:#fff;font-size:12px;color:var(--muted)}
   .strip b{color:var(--ink);font-weight:600}
-  .stage{padding:30px 24px 80px;display:flex;justify-content:center}
-  .board{position:relative}            /* the single canvas: letter + side notes + wires */
-  .letter{position:absolute;left:0;top:0;line-height:0}
+  .stage{padding:28px 24px 80px;display:flex;justify-content:center}
+  .board{position:relative;display:flex;align-items:flex-start;gap:96px}
+  #wires{position:absolute;left:0;top:0;pointer-events:none;z-index:3;overflow:visible}
+  #wires path{fill:none;stroke-width:1.3;opacity:.28;transition:opacity .12s,stroke-width .12s}
+  #wires path.on{opacity:1;stroke-width:2.4}
+  .letter{position:relative;flex:0 0 600px;width:600px;max-width:100%;line-height:0}
   .letter img{width:100%;display:block;border:1px solid var(--line);box-shadow:0 4px 22px rgba(20,30,45,.12);background:#fff}
-  .rg{position:absolute;border-radius:3px;cursor:pointer;outline:none;background:rgba(var(--c),.10);transition:background .12s,box-shadow .12s}
-  .rg:hover,.rg:focus,.rg.on{background:rgba(var(--c),.26);box-shadow:0 0 0 2px rgba(var(--c),.85)}
-  .notes{position:absolute;top:0}
-  .note{position:absolute;width:100%;background:#fff;border:1px solid var(--line);border-left:4px solid rgb(var(--c));
-         border-radius:8px;padding:8px 11px;box-shadow:0 1px 3px rgba(20,30,45,.05);cursor:pointer;outline:none;
-         transition:box-shadow .12s,transform .12s,background .12s}
-  .note:hover,.note:focus,.note.on{background:rgba(var(--c),.06);box-shadow:0 3px 14px rgba(var(--c),.28);transform:translateX(2px)}
+  .rg{position:absolute;border-radius:3px;cursor:pointer;outline:none;background:rgba(var(--c),.11);transition:background .12s,box-shadow .12s}
+  .rg:hover,.rg:focus,.rg.on{background:rgba(var(--c),.30);box-shadow:0 0 0 2px rgba(var(--c),.9)}
+  .notes{flex:0 0 340px;width:340px;max-width:100%;display:flex;flex-direction:column;gap:7px;z-index:4}
+  .note{background:#fff;border:1px solid var(--line);border-left:4px solid rgb(var(--c));border-radius:8px;
+         padding:8px 11px;box-shadow:0 1px 3px rgba(20,30,45,.05);cursor:pointer;outline:none;
+         transition:box-shadow .12s,background .12s,transform .12s}
+  .note:hover,.note:focus,.note.on{background:rgba(var(--c),.07);box-shadow:0 4px 16px rgba(var(--c),.30);transform:translateX(-2px)}
   .nhd{display:flex;align-items:center;gap:7px}
   .dot{width:11px;height:11px;border-radius:3px;background:rgb(var(--c));flex:0 0 auto}
   .ntitle{font-weight:600;font-size:12.5px}
   .tag{font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;color:rgb(var(--c));margin-left:auto}
   .nsum{font-size:11px;color:var(--muted);margin-top:3px}
-  .ndet{max-height:0;overflow:hidden;transition:max-height .18s ease;font-size:11px;margin-top:0}
-  .note:hover .ndet,.note:focus .ndet,.note.on .ndet{max-height:360px;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}
+  .ndet{max-height:0;overflow:hidden;transition:max-height .2s ease;font-size:11px}
+  .note:hover .ndet,.note:focus .ndet,.note.on .ndet{max-height:340px;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}
   .ndet dl{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:0}
-  .ndet dt{color:var(--muted)} .ndet dd{margin:0} .ndet .note{position:static;all:unset;display:block;margin-top:5px;color:#475569;font-size:11px}
-  #wires{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-  #wires path{fill:none;stroke-width:1.4;opacity:.30;transition:opacity .12s,stroke-width .12s}
-  #wires path.on{opacity:1;stroke-width:2.4}
-  @media (max-width:980px){
-    .stage{padding:16px} .board{width:100%!important;height:auto!important}
-    .letter{position:static;width:100%!important} #wires{display:none}
-    .notes{position:static;width:100%!important;margin-top:16px}
-    .note{position:static!important;width:100%;margin-bottom:8px} .ndet{max-height:none;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}
+  .ndet dt{color:var(--muted)} .ndet dd{margin:0} .ndet .hint{margin-top:5px;color:#475569}
+  @media (max-width:1040px){
+    .board{flex-direction:column;gap:14px} #wires{display:none}
+    .letter{flex:none;width:100%} .notes{flex:none;width:100%}
+    .ndet{max-height:none;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}
   }
   @media print{body{background:#fff} #wires path{opacity:.5} .ndet{max-height:none!important;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px} .note{box-shadow:none}}
 </style></head>
 <body>
-<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, pagina unica continua. Le sezioni hanno un colore permanente; passando il mouse (sulla lettera o sulla scheda) si intensificano e la linea le collega. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
+<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, <b>pagina unica</b>. Ogni sezione ha un colore permanente; passando il mouse (sulla lettera o sulla scheda) sezione e scheda si intensificano e la linea le collega. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
 <div class="stage">
   <div class="board" id="board">
     <svg id="wires"></svg>
     <div class="letter" id="letter">
       <img id="page" src="lettera_fittizia_review.png" alt="Lettera fittizia (render reale, pagina unica)">
-            <div class="rg" id="rg0" data-k="header" tabindex="0" title="Intestazione (letterhead)" style="left:9.34%;top:3.23%;width:28.27%;height:14.88%;--c:100,116,139"></div>
-      <div class="rg" id="rg1" data-k="delivery" tabindex="0" title="Metodo di trasmissione" style="left:9.34%;top:17.77%;width:41.58%;height:1.64%;--c:202,138,4"></div>
-      <div class="rg" id="rg2" data-k="date" tabindex="0" title="Data e luogo" style="left:69.25%;top:20.06%;width:21.45%;height:1.64%;--c:13,148,136"></div>
-      <div class="rg" id="rg3" data-k="recipient" tabindex="0" title="Destinatario" style="left:49.81%;top:22.56%;width:29.40%;height:6.62%;--c:79,70,229"></div>
-      <div class="rg" id="rg4" data-k="ogglabel" tabindex="0" title="OGGETTO — etichetta" style="left:42.50%;top:30.04%;width:15.02%;height:2.11%;--c:225,29,72"></div>
-      <div class="rg" id="rg5" data-k="oggbody" tabindex="0" title="OGGETTO — contenuto" style="left:9.34%;top:32.37%;width:56.23%;height:1.64%;--c:219,39,119"></div>
-      <div class="rg" id="rg6" data-k="opening" tabindex="0" title="Apertura (saluto)" style="left:9.34%;top:34.66%;width:14.72%;height:1.64%;--c:22,163,74"></div>
-      <div class="rg" id="rg7" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:36.74%;width:81.44%;height:3.09%;--c:37,99,235"></div>
-      <div class="rg" id="rg8" data-k="subhead" tabindex="0" title="Titoletto a sinistra" style="left:9.34%;top:40.90%;width:5.75%;height:1.88%;--c:124,58,237"></div>
-      <div class="rg" id="rg9" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:43.21%;width:81.27%;height:6.62%;--c:37,99,235"></div>
-      <div class="rg" id="rg10" data-k="ritual" tabindex="0" title="Titolo rituale centrato" style="left:44.22%;top:51.11%;width:11.59%;height:2.11%;--c:234,88,12"></div>
-      <div class="rg" id="rg11" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:53.86%;width:32.84%;height:1.64%;--c:37,99,235"></div>
-      <div class="rg" id="rg12" data-k="list" tabindex="0" title="Voce di elenco" style="left:11.72%;top:55.94%;width:78.89%;height:4.96%;--c:8,145,178"></div>
-      <div class="rg" id="rg13" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:61.12%;width:81.23%;height:3.09%;--c:37,99,235"></div>
-      <div class="rg" id="rg14" data-k="closing" tabindex="0" title="Congedo" style="left:35.27%;top:65.69%;width:55.38%;height:1.64%;--c:101,163,13"></div>
-      <div class="rg" id="rg15" data-k="signature" tabindex="0" title="Blocco firma" style="left:56.49%;top:69.03%;width:34.21%;height:4.96%;--c:146,64,14"></div>
-      <div class="rg" id="rg16" data-k="attach" tabindex="0" title="Allegati" style="left:9.34%;top:75.47%;width:51.11%;height:5.27%;--c:162,28,175"></div>
-      <div class="rg" id="rg17" data-k="post" tabindex="0" title="Postilla / disclaimer" style="left:45.49%;top:80.96%;width:45.01%;height:1.41%;--c:71,85,105"></div>
-      <div class="rg" id="rg18" data-k="footer" tabindex="0" title="Piè di pagina" style="left:9.34%;top:86.72%;width:81.36%;height:10.28%;--c:100,116,139"></div>
+      <div class="rg anchor" id="anc-header" data-k="header" tabindex="0" title="Intestazione (letterhead)" style="left:9.34%;top:3.23%;width:28.27%;height:14.88%;--c:100,116,139"></div>
+      <div class="rg anchor" id="anc-delivery" data-k="delivery" tabindex="0" title="Metodo di trasmissione" style="left:9.34%;top:17.77%;width:41.58%;height:1.64%;--c:202,138,4"></div>
+      <div class="rg anchor" id="anc-date" data-k="date" tabindex="0" title="Data e luogo" style="left:69.25%;top:20.06%;width:21.45%;height:1.64%;--c:13,148,136"></div>
+      <div class="rg anchor" id="anc-recipient" data-k="recipient" tabindex="0" title="Destinatario" style="left:49.81%;top:22.56%;width:29.40%;height:6.62%;--c:79,70,229"></div>
+      <div class="rg anchor" id="anc-ogglabel" data-k="ogglabel" tabindex="0" title="OGGETTO — etichetta" style="left:42.50%;top:30.04%;width:15.02%;height:2.11%;--c:225,29,72"></div>
+      <div class="rg anchor" id="anc-oggbody" data-k="oggbody" tabindex="0" title="OGGETTO — contenuto" style="left:9.34%;top:32.37%;width:56.23%;height:1.64%;--c:219,39,119"></div>
+      <div class="rg anchor" id="anc-opening" data-k="opening" tabindex="0" title="Apertura (saluto)" style="left:9.34%;top:34.66%;width:14.72%;height:1.64%;--c:22,163,74"></div>
+      <div class="rg anchor" id="anc-body" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:36.74%;width:81.44%;height:3.09%;--c:37,99,235"></div>
+      <div class="rg anchor" id="anc-subhead" data-k="subhead" tabindex="0" title="Titoletto a sinistra" style="left:9.34%;top:40.90%;width:5.75%;height:1.88%;--c:124,58,237"></div>
+      <div class="rg" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:43.21%;width:81.27%;height:6.62%;--c:37,99,235"></div>
+      <div class="rg anchor" id="anc-ritual" data-k="ritual" tabindex="0" title="Titolo rituale centrato" style="left:44.22%;top:51.11%;width:11.59%;height:2.11%;--c:234,88,12"></div>
+      <div class="rg" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:53.86%;width:32.84%;height:1.64%;--c:37,99,235"></div>
+      <div class="rg anchor" id="anc-list" data-k="list" tabindex="0" title="Voce di elenco" style="left:11.72%;top:55.94%;width:78.89%;height:4.96%;--c:8,145,178"></div>
+      <div class="rg" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:61.12%;width:81.23%;height:3.09%;--c:37,99,235"></div>
+      <div class="rg anchor" id="anc-closing" data-k="closing" tabindex="0" title="Congedo" style="left:35.27%;top:65.69%;width:55.38%;height:1.64%;--c:101,163,13"></div>
+      <div class="rg anchor" id="anc-signature" data-k="signature" tabindex="0" title="Blocco firma" style="left:56.49%;top:69.03%;width:34.21%;height:4.96%;--c:146,64,14"></div>
+      <div class="rg anchor" id="anc-attach" data-k="attach" tabindex="0" title="Allegati" style="left:9.34%;top:75.47%;width:51.11%;height:5.27%;--c:162,28,175"></div>
+      <div class="rg anchor" id="anc-post" data-k="post" tabindex="0" title="Postilla / disclaimer" style="left:45.49%;top:80.96%;width:45.01%;height:1.41%;--c:71,85,105"></div>
+      <div class="rg anchor" id="anc-footer" data-k="footer" tabindex="0" title="Piè di pagina" style="left:9.34%;top:86.72%;width:81.36%;height:10.28%;--c:100,116,139"></div>
     </div>
     <div class="notes" id="notes">
-      <div class="note" id="nt0" data-k="header" data-rg="rg0" tabindex="0" style="--c:100,116,139">
+      <div class="note" data-k="header" tabindex="0" style="--c:100,116,139">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Intestazione (letterhead)</span><span class="tag">Ereditato</span></div>
         <div class="nsum">Ereditato dal template (Garamond).</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Template (non generato)</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>14 pt / 16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine sup. 5.91 cm</dd></dl><div class="note">Carta intestata ereditata dal template; il corpo non la duplica.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Template (non generato)</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>14 pt / 16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine sup. 5.91 cm</dd></dl><div class="hint">Carta intestata ereditata dal template; il corpo non la duplica.</div></div>
       </div>
-      <div class="note" id="nt1" data-k="delivery" data-rg="rg1" tabindex="0" style="--c:202,138,4">
+      <div class="note" data-k="delivery" tabindex="0" style="--c:202,138,4">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Metodo di trasmissione</span></div>
         <div class="nsum">sinistra, 12 pt, corsivo.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Reso solo se fornito. Può anche essere la prima riga del destinatario.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Reso solo se fornito. Può anche essere la prima riga del destinatario.</div></div>
       </div>
-      <div class="note" id="nt2" data-k="date" data-rg="rg2" tabindex="0" style="--c:13,148,136">
+      <div class="note" data-k="date" tabindex="0" style="--c:13,148,136">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Data e luogo</span></div>
         <div class="nsum">destra, 12 pt.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 6 / dopo 10 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Resa solo se fornita; lo script non inventa una data assente.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 6 / dopo 10 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Resa solo se fornita; lo script non inventa una data assente.</div></div>
       </div>
-      <div class="note" id="nt3" data-k="recipient" data-rg="rg3" tabindex="0" style="--c:79,70,229">
+      <div class="note" data-k="recipient" tabindex="0" style="--c:79,70,229">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Destinatario</span></div>
         <div class="nsum">sinistra, 12 pt, grassetto, rientro 8.5 cm.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Rientro sx</dt><dd>8.5 cm</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Appellativo personale unito al nome (“Egr. Sig. Mario Rossi”); “Spett.le” davanti a società resta su riga propria.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Rientro sx</dt><dd>8.5 cm</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Appellativo personale unito al nome (“Egr. Sig. Mario Rossi”); “Spett.le” davanti a società resta su riga propria.</div></div>
       </div>
-      <div class="note" id="nt4" data-k="ogglabel" data-rg="rg4" tabindex="0" style="--c:225,29,72">
+      <div class="note" data-k="ogglabel" tabindex="0" style="--c:225,29,72">
         <div class="nhd"><span class="dot"></span><span class="ntitle">OGGETTO — etichetta</span><span class="tag">Punto sensibile</span></div>
         <div class="nsum">centrato, 16 pt, grassetto.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 10 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Punto sensibile (feedback 027): etichetta come titolo centrato, lasciata come scritta.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 10 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="hint">Punto sensibile (feedback 027): etichetta come titolo centrato, lasciata come scritta.</div></div>
       </div>
-      <div class="note" id="nt5" data-k="oggbody" data-rg="rg5" tabindex="0" style="--c:219,39,119">
+      <div class="note" data-k="oggbody" tabindex="0" style="--c:219,39,119">
         <div class="nhd"><span class="dot"></span><span class="ntitle">OGGETTO — contenuto</span><span class="tag">Punto sensibile</span></div>
         <div class="nsum">giustificato, 12 pt, grassetto.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">La contestazione su 027 era il contenuto centrato invece che giustificato: ora è giustificato.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">La contestazione su 027 era il contenuto centrato invece che giustificato: ora è giustificato.</div></div>
       </div>
-      <div class="note" id="nt6" data-k="opening" data-rg="rg6" tabindex="0" style="--c:22,163,74">
+      <div class="note" data-k="opening" tabindex="0" style="--c:22,163,74">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Apertura (saluto)</span></div>
         <div class="nsum">giustificato, 12 pt, grassetto.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 8 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Formale → grassetto + giustificato; e-mail → tondo + sinistra. Reso solo se fornito.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 8 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Formale → grassetto + giustificato; e-mail → tondo + sinistra. Reso solo se fornito.</div></div>
       </div>
-      <div class="note" id="nt7" data-k="body" data-rg="rg7" tabindex="0" style="--c:37,99,235">
+      <div class="note" data-k="body" tabindex="0" style="--c:37,99,235">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Paragrafo di corpo</span></div>
         <div class="nsum">giustificato, 12 pt.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Normalizzazione: “–/—” → “-”; divisori “***” rimossi.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Normalizzazione: “–/—” → “-”; divisori “***” rimossi.</div></div>
       </div>
-      <div class="note" id="nt8" data-k="subhead" data-rg="rg8" tabindex="0" style="--c:124,58,237">
+      <div class="note" data-k="subhead" tabindex="0" style="--c:124,58,237">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Titoletto a sinistra</span></div>
         <div class="nsum">sinistra, 14 pt, grassetto.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>14 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 12 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “Fatto”, “MOTIVA …”; i verbi dispositivi usano titoletto + contenuto a capo.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>14 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 12 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="hint">Es. “Fatto”, “MOTIVA …”; i verbi dispositivi usano titoletto + contenuto a capo.</div></div>
       </div>
-      <div class="note" id="nt9" data-k="body" data-rg="rg9" tabindex="0" style="--c:37,99,235">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Paragrafo di corpo</span></div>
-        <div class="nsum">giustificato, 12 pt.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Normalizzazione: “–/—” → “-”; divisori “***” rimossi.</div></div>
-      </div>
-      <div class="note" id="nt10" data-k="ritual" data-rg="rg10" tabindex="0" style="--c:234,88,12">
+      <div class="note" data-k="ritual" tabindex="0" style="--c:234,88,12">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Titolo rituale centrato</span></div>
         <div class="nsum">centrato, 16 pt, grassetto.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 14 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “IN FATTO”, “DICHIARA”, “DIFFIDA”, “PREMESSO CHE”, “INVITA”.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 14 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="hint">Es. “IN FATTO”, “DICHIARA”, “DIFFIDA”, “PREMESSO CHE”, “INVITA”.</div></div>
       </div>
-      <div class="note" id="nt11" data-k="body" data-rg="rg11" tabindex="0" style="--c:37,99,235">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Paragrafo di corpo</span></div>
-        <div class="nsum">giustificato, 12 pt.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Normalizzazione: “–/—” → “-”; divisori “***” rimossi.</div></div>
-      </div>
-      <div class="note" id="nt12" data-k="list" data-rg="rg12" tabindex="0" style="--c:8,145,178">
+      <div class="note" data-k="list" tabindex="0" style="--c:8,145,178">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Voce di elenco</span></div>
         <div class="nsum">giustificato, 12 pt, rientro 0.5 cm.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Rientro sx</dt><dd>0.5 cm</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Marcatore ((i)/(a)/•) incluso nel testo.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Rientro sx</dt><dd>0.5 cm</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Marcatore ((i)/(a)/•) incluso nel testo.</div></div>
       </div>
-      <div class="note" id="nt13" data-k="body" data-rg="rg13" tabindex="0" style="--c:37,99,235">
-        <div class="nhd"><span class="dot"></span><span class="ntitle">Paragrafo di corpo</span></div>
-        <div class="nsum">giustificato, 12 pt.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Normalizzazione: “–/—” → “-”; divisori “***” rimossi.</div></div>
-      </div>
-      <div class="note" id="nt14" data-k="closing" data-rg="rg14" tabindex="0" style="--c:101,163,13">
+      <div class="note" data-k="closing" tabindex="0" style="--c:101,163,13">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Congedo</span></div>
         <div class="nsum">destra, 12 pt.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Stesso lato della firma (destra).</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Stesso lato della firma (destra).</div></div>
       </div>
-      <div class="note" id="nt15" data-k="signature" data-rg="rg15" tabindex="0" style="--c:146,64,14">
+      <div class="note" data-k="signature" tabindex="0" style="--c:146,64,14">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Blocco firma</span><span class="tag">Da approvare</span></div>
         <div class="nsum">destra, 12 pt.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 18 / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Nomi firmatari in grassetto; “(Firma digitale)” in corsivo; spaziatura ariosa — da approvare.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 18 / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Nomi firmatari in grassetto; “(Firma digitale)” in corsivo; spaziatura ariosa — da approvare.</div></div>
       </div>
-      <div class="note" id="nt16" data-k="attach" data-rg="rg16" tabindex="0" style="--c:162,28,175">
+      <div class="note" data-k="attach" tabindex="0" style="--c:162,28,175">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Allegati</span></div>
         <div class="nsum">sinistra, 12 pt, grassetto.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">“Allegati:” in grassetto; voci rientrate.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">“Allegati:” in grassetto; voci rientrate.</div></div>
       </div>
-      <div class="note" id="nt17" data-k="post" data-rg="rg17" tabindex="0" style="--c:71,85,105">
+      <div class="note" data-k="post" tabindex="0" style="--c:71,85,105">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Postilla / disclaimer</span></div>
         <div class="nsum">destra, 10 pt, corsivo.</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 4 / dopo 0 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Piccola, in corsivo.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 4 / dopo 0 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="hint">Piccola, in corsivo.</div></div>
       </div>
-      <div class="note" id="nt18" data-k="footer" data-rg="rg18" tabindex="0" style="--c:100,116,139">
+      <div class="note" data-k="footer" tabindex="0" style="--c:100,116,139">
         <div class="nhd"><span class="dot"></span><span class="ntitle">Piè di pagina</span><span class="tag">Ereditato</span></div>
         <div class="nsum">Ereditato dal template (Garamond).</div>
-        <div class="ndet"><dl><dt>Provenienza</dt><dd>Template (non generato)</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine inf. 4.54 cm</dd></dl><div class="note">Dati di registrazione dello Studio, ereditati dal template.</div></div>
+        <div class="ndet"><dl><dt>Provenienza</dt><dd>Template (non generato)</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine inf. 4.54 cm</dd></dl><div class="hint">Dati di registrazione dello Studio, ereditati dal template.</div></div>
       </div>
     </div>
   </div>
 </div>
 <script>
 (function(){
-  var LW=620, GAP=140, NW=330;        // letter width, gap (wire room), notes width
-  var board=document.getElementById('board'), letter=document.getElementById('letter'),
-      notes=document.getElementById('notes'), wires=document.getElementById('wires'),
-      img=document.getElementById('page');
   function all(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
-  function desktop(){return window.innerWidth>980;}
-  function layout(){
-    if(!desktop()){ wires.innerHTML=''; return; }
-    letter.style.width=LW+'px'; notes.style.left=(LW+GAP)+'px'; notes.style.width=NW+'px';
-    var imgH=img.clientHeight;
-    // place each note near its region's vertical centre, then resolve overlaps
-    var cards=all('.note'), prevB=0, GAPY=8;
-    cards.forEach(function(n){
-      var rg=document.getElementById(n.getAttribute('data-rg'));
-      var c=(rg.offsetTop+rg.offsetHeight/2);
-      var top=Math.max(c-n.offsetHeight/2, prevB);
-      n.style.top=top+'px'; prevB=top+n.offsetHeight+GAPY;
-    });
-    var notesB=prevB, h=Math.max(imgH,notesB);
-    board.style.width=(LW+GAP+NW)+'px'; board.style.height=h+'px';
-    wires.setAttribute('width',LW+GAP+NW); wires.setAttribute('height',h);
-    drawWires();
-  }
-  function drawWires(){
-    var svg='';
+  var board=document.getElementById('board'), wires=document.getElementById('wires'), img=document.getElementById('page');
+  function anchor(k){return document.getElementById('anc-'+k);}
+  function draw(){
+    if(window.innerWidth<=1040){ wires.innerHTML=''; return; }
+    var br=board.getBoundingClientRect();
+    wires.setAttribute('width',board.clientWidth); wires.setAttribute('height',board.clientHeight);
+    var s='';
     all('.note').forEach(function(n){
-      var rg=document.getElementById(n.getAttribute('data-rg'));
-      var x1=rg.offsetLeft+rg.offsetWidth, y1=rg.offsetTop+rg.offsetHeight/2;
-      var x2=(LW+GAP), y2=n.offsetTop+n.offsetHeight/2;
-      var mx=(x1+x2)/2, c=getComputedStyle(n).getPropertyValue('--c');
-      svg+='<path id="w-'+n.id+'" data-k="'+n.getAttribute('data-k')+'" d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" stroke="rgb('+c+')"></path>';
+      var k=n.getAttribute('data-k'), rg=anchor(k); if(!rg) return;
+      var a=rg.getBoundingClientRect(), b=n.getBoundingClientRect();
+      var x1=a.right-br.left, y1=a.top-br.top+a.height/2;
+      var x2=b.left-br.left,  y2=b.top-br.top+b.height/2;
+      var mx=(x1+x2)/2, c=getComputedStyle(n).getPropertyValue('--c').trim();
+      s+='<path data-k="'+k+'" d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" stroke="rgb('+c+')"></path>';
     });
-    wires.innerHTML=svg;
+    wires.innerHTML=s;
   }
   function setOn(k,on){
     all('.rg[data-k="'+k+'"]').forEach(function(e){e.classList.toggle('on',on);});
@@ -208,12 +176,17 @@
   function wire(el){var k=el.getAttribute('data-k');
     el.addEventListener('mouseenter',function(){setOn(k,true);});
     el.addEventListener('mouseleave',function(){setOn(k,false);});
-    el.addEventListener('focus',function(){setOn(k,true); if(desktop()) layout();});
+    el.addEventListener('focus',function(){setOn(k,true);});
     el.addEventListener('blur',function(){setOn(k,false);});
+    // card expansion changes geometry -> redraw after the transition
+    el.addEventListener('mouseenter',function(){setTimeout(draw,210);});
+    el.addEventListener('mouseleave',function(){setTimeout(draw,210);});
   }
   all('.rg').forEach(wire); all('.note').forEach(wire);
-  if(img.complete) layout(); else img.addEventListener('load',layout);
-  var raf=null; window.addEventListener('resize',function(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;layout();});});
+  function redraw(){requestAnimationFrame(draw);}
+  if(img.complete) redraw(); else img.addEventListener('load',redraw);
+  window.addEventListener('load',redraw);
+  var t=null; window.addEventListener('resize',function(){if(t)return;t=setTimeout(function(){t=null;draw();},120);});
 })();
 </script>
 </body></html>

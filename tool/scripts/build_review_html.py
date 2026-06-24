@@ -4,10 +4,10 @@
 - fictional content -> LetterDocument -> render_letter -> out/lettera_fittizia.docx
 - LibreOffice -> out/lettera_fittizia.pdf  (real, paginated: the deliverables)
 - a CONTINUOUS copy (one tall page, no page breaks) -> PDF -> single PNG + bbox
-  used ONLY for the web preview, so the letter shows as one long page
-- HTML "board": the letter (permanent light per-section tints) with side
-  annotations aligned to each section and permanent light connector lines;
-  hovering a section or its card intensifies both. No hero, single canvas.
+  used ONLY for the web preview (letter shown as one long page)
+- HTML "board": letter (permanent light per-section tints) on the left + section
+  cards in a normal-flow column on the right + permanent light connector lines
+  (SVG) joining each section to its card; hover/focus intensifies both. No hero.
 
 Run:  .venv/bin/python tool/scripts/build_review_html.py
 """
@@ -109,7 +109,7 @@ top_cm=round(Emu(sec.top_margin).cm,2); bot_cm=round(Emu(sec.bottom_margin).cm,2
 hdr_set=[norm(t) for t,_,_ in header_lines]
 top_pt=top_cm*PT_CM; bot_pt=bot_cm*PT_CM
 
-# ---------- helpers: soffice / bbox ----------
+# ---------- helpers ----------
 def soffice_pdf(src,outdir):
     prof=tempfile.mkdtemp(prefix="lo_")
     subprocess.run(["soffice","--headless",f"-env:UserInstallation=file://{prof}",
@@ -128,40 +128,32 @@ def bbox_pages(pdf):
         out.append((float(pw),float(ph),words))
     return out
 
-# ---------- 2b) deliverable PDF (real, paginated) ----------
 soffice_pdf(DOCX, OUT)
 print(f"[2] PDF {PDF}")
 pag = bbox_pages(PDF)
 
-# ---------- 3) continuous copy: one tall page that fits the content ----------
+# ---------- 3) continuous one-page copy ----------
 H_body=0.0
 for pw,ph,words in pag:
     body_w=[w for w in words if (top_pt-8) < w[1] < (ph-bot_pt-8)]
-    if body_w:
-        H_body += max(w[3] for w in body_w) - top_pt
+    if body_w: H_body += max(w[3] for w in body_w) - top_pt
 new_h_pt = top_pt + H_body + bot_pt + 40
-# grow until everything fits on ONE page (pdftoppm -singlefile renders page 1 only)
-cont_pdf = None; npages = 99
+cont_pdf=None; npages=99
 for _ in range(8):
-    cont = Document(DOCX)
-    cont.sections[0].page_height = Cm(new_h_pt/PT_CM)
-    cont.save(CONT_DOCX)
-    cont_pdf = soffice_pdf(CONT_DOCX, OUTH)
-    npages = len(bbox_pages(cont_pdf))
-    if npages <= 1: break
-    new_h_pt += 3*PT_CM    # +3 cm and retry
-print(f"[3] continuous page: {new_h_pt/PT_CM:.1f} cm -> {npages} pagina/e")
+    cont = Document(DOCX); cont.sections[0].page_height = Cm(new_h_pt/PT_CM); cont.save(CONT_DOCX)
+    cont_pdf = soffice_pdf(CONT_DOCX, OUTH); npages=len(bbox_pages(cont_pdf))
+    if npages<=1: break
+    new_h_pt += 3*PT_CM
+print(f"[3] continuous page {new_h_pt/PT_CM:.1f} cm -> {npages} pag")
 
-# ---------- 4) single PNG + coords from the continuous PDF ----------
-for old in glob.glob(PNG_PREFIX_OLD) if (PNG_PREFIX_OLD:=os.path.join(OUTH,"lettera_fittizia_review-*.png")) else []:
-    os.remove(old)
+# ---------- 4) single PNG + coords ----------
+for old in glob.glob(os.path.join(OUTH,"lettera_fittizia_review-*.png")): os.remove(old)
 if os.path.exists(PNG): os.remove(PNG)
-subprocess.run(["pdftoppm","-png","-r","150","-singlefile",cont_pdf,os.path.splitext(PNG)[0]],
-               check=True,timeout=120)
+subprocess.run(["pdftoppm","-png","-r","150","-singlefile",cont_pdf,os.path.splitext(PNG)[0]],check=True,timeout=120)
 cpw,cph,cwords = bbox_pages(cont_pdf)[0]
 os.remove(cont_pdf); os.remove(CONT_DOCX)
 
-# ---------- 5) words -> lines -> regions (% of the single page) ----------
+# ---------- 5) words -> lines -> regions ----------
 def line_key(text,yMin,yMax,pageH):
     if yMax <= top_pt+8:
         for t in hdr_set:
@@ -193,12 +185,12 @@ for (x0,y0,x1,y1,txt) in L:
         if run: regions.append(run)
         run=dict(k=k,x0=x0,y0=y0,x1=x1,y1=y1)
 if run: regions.append(run)
+# merge regions of the same key into ONE card per key (keep all boxes for tints)
 def pct(r,pad=1.2):
     return (max(0,(r["x0"]-pad)/cpw*100),max(0,(r["y0"]-pad)/cph*100),
             (r["x1"]-r["x0"]+2*pad)/cpw*100,(r["y1"]-r["y0"]+2*pad)/cph*100)
-present=[r["k"] for r in regions]
 
-# ---------- 6) section metadata ----------
+# ---------- 6) metadata ----------
 COLORS={"header":(100,116,139),"delivery":(202,138,4),"date":(13,148,136),
     "recipient":(79,70,229),"ogglabel":(225,29,72),"oggbody":(219,39,119),
     "opening":(22,163,74),"body":(37,99,235),"subhead":(124,58,237),"ritual":(234,88,12),
@@ -243,7 +235,7 @@ def details(key):
             rows+=[("Grassetto","sì" if i["anybold"] else "no"),("Corsivo","sì" if i["italic"] else "no"),
                    ("Spaziatura",f"prima {i['sb']:g} / dopo {i['sa']:g} pt"),("Anti-orfano","keep-with-next" if i["kwn"] else "no")]
     dl="".join(f"<dt>{k}</dt><dd>{v}</dd>" for k,v in rows)
-    return f"<dl>{dl}</dl>"+(f'<div class="note">{NOTE.get(key,"")}</div>' if NOTE.get(key) else "")
+    return f"<dl>{dl}</dl>"+(f'<div class="hint">{NOTE.get(key,"")}</div>' if NOTE.get(key) else "")
 def summary(key):
     if key in ("header","footer"): return "Ereditato dal template (Garamond)."
     i=agg.get(key)
@@ -254,73 +246,77 @@ def summary(key):
     if i["li"]: bits.append(f"rientro {i['li']:g} cm")
     return ", ".join(bits)+"."
 
-# region divs (permanent light tint)
 def col(k): r,g,b=COLORS[k]; return f"{r},{g},{b}"
-rg_html=[]
+# region tint divs (all boxes); the FIRST box per key gets an anchor id for the wire
+seen=set(); rg_html=[]
 for idx,r in enumerate(regions):
-    l,t,w,h=pct(r); rg_html.append(
-      f'<div class="rg" id="rg{idx}" data-k="{r["k"]}" tabindex="0" title="{esc(LABEL[r["k"]])}" '
-      f'style="left:{l:.2f}%;top:{t:.2f}%;width:{w:.2f}%;height:{h:.2f}%;--c:{col(r["k"])}"></div>')
-# one annotation card per region, in document (vertical) order
+    k=r["k"]; l,t,w,h=pct(r)
+    anchor = (k not in seen)
+    aid = f' id="anc-{k}"' if anchor else ""
+    seen.add(k)
+    rg_html.append(f'<div class="rg{ " anchor" if anchor else ""}"{aid} data-k="{k}" tabindex="0" '
+                   f'title="{esc(LABEL[k])}" style="left:{l:.2f}%;top:{t:.2f}%;width:{w:.2f}%;height:{h:.2f}%;--c:{col(k)}"></div>')
+# one card per key, in document order of first appearance
+order_seen=[];
+for r in regions:
+    if r["k"] not in order_seen: order_seen.append(r["k"])
 notes_html=[]
-for idx,r in enumerate(regions):
-    k=r["k"]; tag=f'<span class="tag">{TAG[k]}</span>' if k in TAG else ""
-    notes_html.append(f'''      <div class="note" id="nt{idx}" data-k="{k}" data-rg="rg{idx}" tabindex="0" style="--c:{col(k)}">
+for k in order_seen:
+    tag=f'<span class="tag">{TAG[k]}</span>' if k in TAG else ""
+    notes_html.append(f'''      <div class="note" data-k="{k}" tabindex="0" style="--c:{col(k)}">
         <div class="nhd"><span class="dot"></span><span class="ntitle">{LABEL[k]}</span>{tag}</div>
         <div class="nsum">{summary(k)}</div>
         <div class="ndet">{details(k)}</div>
       </div>''')
-present_keys=[k for k in ORDER if k in present]
-print("[6] regioni:",len(regions)," sezioni:",present_keys)
+print("[6] regioni:",len(regions)," sezioni:",order_seen)
 
 PAGE=f"""<!DOCTYPE html>
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revisione formattazione — Bergamo Legal (lettera fittizia)</title>
 <style>
-  :root{{--ink:#1b2330;--muted:#65707f;--line:#e3e8ef;--bg:#eceff3;--paper:#fff}}
+  :root{{--ink:#1b2330;--muted:#65707f;--line:#e3e8ef;--bg:#eceff3}}
   *{{box-sizing:border-box}} html,body{{margin:0}}
   body{{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}}
   .strip{{padding:10px 20px;border-bottom:1px solid var(--line);background:#fff;font-size:12px;color:var(--muted)}}
   .strip b{{color:var(--ink);font-weight:600}}
-  .stage{{padding:30px 24px 80px;display:flex;justify-content:center}}
-  .board{{position:relative}}            /* the single canvas: letter + side notes + wires */
-  .letter{{position:absolute;left:0;top:0;line-height:0}}
+  .stage{{padding:28px 24px 80px;display:flex;justify-content:center}}
+  .board{{position:relative;display:flex;align-items:flex-start;gap:96px}}
+  #wires{{position:absolute;left:0;top:0;pointer-events:none;z-index:3;overflow:visible}}
+  #wires path{{fill:none;stroke-width:1.3;opacity:.28;transition:opacity .12s,stroke-width .12s}}
+  #wires path.on{{opacity:1;stroke-width:2.4}}
+  .letter{{position:relative;flex:0 0 600px;width:600px;max-width:100%;line-height:0}}
   .letter img{{width:100%;display:block;border:1px solid var(--line);box-shadow:0 4px 22px rgba(20,30,45,.12);background:#fff}}
-  .rg{{position:absolute;border-radius:3px;cursor:pointer;outline:none;background:rgba(var(--c),.10);transition:background .12s,box-shadow .12s}}
-  .rg:hover,.rg:focus,.rg.on{{background:rgba(var(--c),.26);box-shadow:0 0 0 2px rgba(var(--c),.85)}}
-  .notes{{position:absolute;top:0}}
-  .note{{position:absolute;width:100%;background:#fff;border:1px solid var(--line);border-left:4px solid rgb(var(--c));
-         border-radius:8px;padding:8px 11px;box-shadow:0 1px 3px rgba(20,30,45,.05);cursor:pointer;outline:none;
-         transition:box-shadow .12s,transform .12s,background .12s}}
-  .note:hover,.note:focus,.note.on{{background:rgba(var(--c),.06);box-shadow:0 3px 14px rgba(var(--c),.28);transform:translateX(2px)}}
+  .rg{{position:absolute;border-radius:3px;cursor:pointer;outline:none;background:rgba(var(--c),.11);transition:background .12s,box-shadow .12s}}
+  .rg:hover,.rg:focus,.rg.on{{background:rgba(var(--c),.30);box-shadow:0 0 0 2px rgba(var(--c),.9)}}
+  .notes{{flex:0 0 340px;width:340px;max-width:100%;display:flex;flex-direction:column;gap:7px;z-index:4}}
+  .note{{background:#fff;border:1px solid var(--line);border-left:4px solid rgb(var(--c));border-radius:8px;
+         padding:8px 11px;box-shadow:0 1px 3px rgba(20,30,45,.05);cursor:pointer;outline:none;
+         transition:box-shadow .12s,background .12s,transform .12s}}
+  .note:hover,.note:focus,.note.on{{background:rgba(var(--c),.07);box-shadow:0 4px 16px rgba(var(--c),.30);transform:translateX(-2px)}}
   .nhd{{display:flex;align-items:center;gap:7px}}
   .dot{{width:11px;height:11px;border-radius:3px;background:rgb(var(--c));flex:0 0 auto}}
   .ntitle{{font-weight:600;font-size:12.5px}}
   .tag{{font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;color:rgb(var(--c));margin-left:auto}}
   .nsum{{font-size:11px;color:var(--muted);margin-top:3px}}
-  .ndet{{max-height:0;overflow:hidden;transition:max-height .18s ease;font-size:11px;margin-top:0}}
-  .note:hover .ndet,.note:focus .ndet,.note.on .ndet{{max-height:360px;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}}
+  .ndet{{max-height:0;overflow:hidden;transition:max-height .2s ease;font-size:11px}}
+  .note:hover .ndet,.note:focus .ndet,.note.on .ndet{{max-height:340px;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}}
   .ndet dl{{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:0}}
-  .ndet dt{{color:var(--muted)}} .ndet dd{{margin:0}} .ndet .note{{position:static;all:unset;display:block;margin-top:5px;color:#475569;font-size:11px}}
-  #wires{{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}}
-  #wires path{{fill:none;stroke-width:1.4;opacity:.30;transition:opacity .12s,stroke-width .12s}}
-  #wires path.on{{opacity:1;stroke-width:2.4}}
-  @media (max-width:980px){{
-    .stage{{padding:16px}} .board{{width:100%!important;height:auto!important}}
-    .letter{{position:static;width:100%!important}} #wires{{display:none}}
-    .notes{{position:static;width:100%!important;margin-top:16px}}
-    .note{{position:static!important;width:100%;margin-bottom:8px}} .ndet{{max-height:none;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}}
+  .ndet dt{{color:var(--muted)}} .ndet dd{{margin:0}} .ndet .hint{{margin-top:5px;color:#475569}}
+  @media (max-width:1040px){{
+    .board{{flex-direction:column;gap:14px}} #wires{{display:none}}
+    .letter{{flex:none;width:100%}} .notes{{flex:none;width:100%}}
+    .ndet{{max-height:none;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}}
   }}
   @media print{{body{{background:#fff}} #wires path{{opacity:.5}} .ndet{{max-height:none!important;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px}} .note{{box-shadow:none}}}}
 </style></head>
 <body>
-<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, pagina unica continua. Le sezioni hanno un colore permanente; passando il mouse (sulla lettera o sulla scheda) si intensificano e la linea le collega. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
+<div class="strip">Lettera <b>fittizia</b> resa dal formatter (DOCX → PDF → immagine): font e impaginazione reali, <b>pagina unica</b>. Ogni sezione ha un colore permanente; passando il mouse (sulla lettera o sulla scheda) sezione e scheda si intensificano e la linea le collega. Documenti puliti: <b>out/lettera_fittizia.docx</b> / <b>.pdf</b>.</div>
 <div class="stage">
   <div class="board" id="board">
     <svg id="wires"></svg>
     <div class="letter" id="letter">
       <img id="page" src="{esc(os.path.basename(PNG))}" alt="Lettera fittizia (render reale, pagina unica)">
-      {os.linesep.join("      "+x for x in rg_html)}
+{os.linesep.join("      "+x for x in rg_html)}
     </div>
     <div class="notes" id="notes">
 {os.linesep.join(notes_html)}
@@ -329,39 +325,23 @@ PAGE=f"""<!DOCTYPE html>
 </div>
 <script>
 (function(){{
-  var LW=620, GAP=140, NW=330;        // letter width, gap (wire room), notes width
-  var board=document.getElementById('board'), letter=document.getElementById('letter'),
-      notes=document.getElementById('notes'), wires=document.getElementById('wires'),
-      img=document.getElementById('page');
   function all(s){{return Array.prototype.slice.call(document.querySelectorAll(s));}}
-  function desktop(){{return window.innerWidth>980;}}
-  function layout(){{
-    if(!desktop()){{ wires.innerHTML=''; return; }}
-    letter.style.width=LW+'px'; notes.style.left=(LW+GAP)+'px'; notes.style.width=NW+'px';
-    var imgH=img.clientHeight;
-    // place each note near its region's vertical centre, then resolve overlaps
-    var cards=all('.note'), prevB=0, GAPY=8;
-    cards.forEach(function(n){{
-      var rg=document.getElementById(n.getAttribute('data-rg'));
-      var c=(rg.offsetTop+rg.offsetHeight/2);
-      var top=Math.max(c-n.offsetHeight/2, prevB);
-      n.style.top=top+'px'; prevB=top+n.offsetHeight+GAPY;
-    }});
-    var notesB=prevB, h=Math.max(imgH,notesB);
-    board.style.width=(LW+GAP+NW)+'px'; board.style.height=h+'px';
-    wires.setAttribute('width',LW+GAP+NW); wires.setAttribute('height',h);
-    drawWires();
-  }}
-  function drawWires(){{
-    var svg='';
+  var board=document.getElementById('board'), wires=document.getElementById('wires'), img=document.getElementById('page');
+  function anchor(k){{return document.getElementById('anc-'+k);}}
+  function draw(){{
+    if(window.innerWidth<=1040){{ wires.innerHTML=''; return; }}
+    var br=board.getBoundingClientRect();
+    wires.setAttribute('width',board.clientWidth); wires.setAttribute('height',board.clientHeight);
+    var s='';
     all('.note').forEach(function(n){{
-      var rg=document.getElementById(n.getAttribute('data-rg'));
-      var x1=rg.offsetLeft+rg.offsetWidth, y1=rg.offsetTop+rg.offsetHeight/2;
-      var x2=(LW+GAP), y2=n.offsetTop+n.offsetHeight/2;
-      var mx=(x1+x2)/2, c=getComputedStyle(n).getPropertyValue('--c');
-      svg+='<path id="w-'+n.id+'" data-k="'+n.getAttribute('data-k')+'" d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" stroke="rgb('+c+')"></path>';
+      var k=n.getAttribute('data-k'), rg=anchor(k); if(!rg) return;
+      var a=rg.getBoundingClientRect(), b=n.getBoundingClientRect();
+      var x1=a.right-br.left, y1=a.top-br.top+a.height/2;
+      var x2=b.left-br.left,  y2=b.top-br.top+b.height/2;
+      var mx=(x1+x2)/2, c=getComputedStyle(n).getPropertyValue('--c').trim();
+      s+='<path data-k="'+k+'" d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" stroke="rgb('+c+')"></path>';
     }});
-    wires.innerHTML=svg;
+    wires.innerHTML=s;
   }}
   function setOn(k,on){{
     all('.rg[data-k="'+k+'"]').forEach(function(e){{e.classList.toggle('on',on);}});
@@ -371,12 +351,17 @@ PAGE=f"""<!DOCTYPE html>
   function wire(el){{var k=el.getAttribute('data-k');
     el.addEventListener('mouseenter',function(){{setOn(k,true);}});
     el.addEventListener('mouseleave',function(){{setOn(k,false);}});
-    el.addEventListener('focus',function(){{setOn(k,true); if(desktop()) layout();}});
+    el.addEventListener('focus',function(){{setOn(k,true);}});
     el.addEventListener('blur',function(){{setOn(k,false);}});
+    // card expansion changes geometry -> redraw after the transition
+    el.addEventListener('mouseenter',function(){{setTimeout(draw,210);}});
+    el.addEventListener('mouseleave',function(){{setTimeout(draw,210);}});
   }}
   all('.rg').forEach(wire); all('.note').forEach(wire);
-  if(img.complete) layout(); else img.addEventListener('load',layout);
-  var raf=null; window.addEventListener('resize',function(){{if(raf)return;raf=requestAnimationFrame(function(){{raf=null;layout();}});}});
+  function redraw(){{requestAnimationFrame(draw);}}
+  if(img.complete) redraw(); else img.addEventListener('load',redraw);
+  window.addEventListener('load',redraw);
+  var t=null; window.addEventListener('resize',function(){{if(t)return;t=setTimeout(function(){{t=null;draw();}},120);}});
 }})();
 </script>
 </body></html>
