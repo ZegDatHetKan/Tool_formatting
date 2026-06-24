@@ -9,6 +9,22 @@ classificazione**. Sono stati analizzati esclusivamente i record con
 > Ambito: **solo lettere**. Atti, mediazioni, ricorsi, memorie e querele sono
 > fuori ambito e non sono trattati qui (cfr. `docs/letter_formatter_goal.md`).
 
+## Fonte di verità e correzioni ad-hoc
+
+Lo **script Python `formatters/letters.py` è la fonte di verità** della
+formattazione: ogni regola di stile vive nel codice, non in patch manuali. I
+documenti si producono **sempre** facendo passare il contenuto semantico
+attraverso questo formatter; non si modifica mai a mano il `.docx` di output (la
+modifica andrebbe persa al render successivo e l'errore si ripresenterebbe).
+
+Se un testo **non riesce a essere formattato correttamente** seguendo lo script
+così com'è, **è consentito intervenire ad-hoc sullo script** (estendere uno
+stile, aggiungere un tipo di blocco, correggere un default) — ma è da **evitare
+se non necessario**. Ogni intervento deve preservare uno stile e un decoro
+adatti a uno studio legale: **niente errori, niente impaginazioni strane**,
+gerarchia visiva coerente. Dopo ogni modifica: rigenerare il documento col tool
+ed eseguire `validate_letters.py` come verifica di regressione.
+
 ## 0. Record di lettere analizzati
 
 Tutti i 15 record `letters` del manifest (tutti `classification_confidence:
@@ -184,12 +200,27 @@ Lista ordinata di blocchi tipizzati. Tipi (cfr. §3 per gli stili):
   "IN DIRITTO" (`001`,`002`), "PREMESSO CHE", "CONSIDERATO CHE" (`010`,`015`),
   "DICHIARA" (`004`,`015`), "DIFFIDA" (`007`,`028`), "INVITA" / "INVITA LA S.V."
   (`001`,`015`), "D I F F I D A  E  I N T I M A" (`010`). `keep_with_next`.
-- **heading_left** — sottotitolo a sinistra 14 pt bold: "Fatto", "Diritto"
-  (`007`,`028`), "MOTIVA il ritiro come segue." (`004`), titoli numerati di
-  argomento "1. Pagina Trustpilot duplicata…" (`025`,`027`). `keep_with_next`.
+- **heading_left** (*titoletto*) — sottotitolo a sinistra **14 pt bold**, con il
+  **contenuto a capo** (riga successiva): "Fatto", "Diritto" (`007`,`028`),
+  "MOTIVA il ritiro come segue." (`004`), titoli numerati di argomento
+  "1. Pagina Trustpilot duplicata…" (`025`,`027`). `keep_with_next`.
 - **list_item** — voce di elenco JUSTIFY con rientro sinistro (default 0.5 cm).
   Marcatori osservati: "(i)/(ii)/(iii)", "i)/ii)", "(a)/(b)", "(α)/(β)", "•".
   Il marcatore fa parte del testo della voce. Rientro variabile 0.5–1.0 cm.
+
+> **Due livelli di titolo, da non confondere (regola cliente):**
+> - **titoletti** → sempre **14 pt, a SINISTRA**, con il **contenuto a capo**
+>   (es. `Fatto`, `Diritto`, `MOTIVA`, `CHIEDE ALTRESÌ`, titoli numerati);
+> - **intestazioni rituali e label OGGETTO** → **16 pt** (le rituali centrate:
+>   `IN FATTO`, `IN DIRITTO`, `DICHIARA`, `DIFFIDA`, `PREMESSO CHE`, `INVITA`…).
+>
+> **Verbi dispositivi con testo a seguire** (es. `CHIEDE ALTRESÌ, ai sensi…`):
+> il verbo è un *titoletto* 14 pt a sinistra e il testo che introduce va **a
+> capo** come paragrafo giustificato — **non** in grassetto inline sulla stessa
+> riga. Il formatter offre l'helper `disposition(verbo, contenuto)` che produce
+> esattamente questa coppia titoletto+paragrafo, così la resa è coerente con gli
+> altri titoletti (es. `MOTIVA`). Il **grassetto leggero** nel corpo resta
+> ammesso per enfasi su termini chiave, ma non per i verbi dispositivi.
 
 ### 4.7 `closing`
 "Distinti saluti.", "Con osservanza," (*italic*), "Cordiali saluti,", "In fede,",

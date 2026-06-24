@@ -34,8 +34,13 @@ from docx.shared import Cm, Pt
 
 BODY_FONT = "Times New Roman"  # HARD_002: explicit on every body run
 SIZE_BODY = 12                 # corpo
-SIZE_HEADING = 16              # titoli rituali centrati + label OGGETTO
-SIZE_SUBHEADING = 14           # sottotitoli a sinistra
+# Two heading tiers, kept deliberately distinct (client rule):
+#  - SIZE_HEADING (16): OGGETTO label + ritual headings (IN FATTO, IN DIRITTO,
+#    DICHIARA, DIFFIDA, PREMESSO CHE, ...), always CENTER;
+#  - SIZE_SUBHEADING (14): "titoletti" (Fatto, Diritto, MOTIVA, CHIEDE ALTRESÌ,
+#    numbered topics), ALWAYS LEFT, with their content on the next line (a capo).
+SIZE_HEADING = 16
+SIZE_SUBHEADING = 14
 SIZE_SMALL = 10                # disclaimer / postscript
 
 RECIPIENT_INDENT_CM = 8.5      # STYLE_008B
@@ -120,6 +125,25 @@ def subheading(content) -> Block:
 def list_item(content, indent_cm: float | None = None) -> Block:
     """An indented list entry. The marker ((i), a), •, ...) is part of content."""
     return Block(BlockKind.LIST_ITEM, content, indent_cm=indent_cm)
+
+
+def disposition(verb, content=None) -> list[Block]:
+    """A dispositive 'titoletto' rendered per the client rule.
+
+    The ``verb`` becomes a 14 pt **left** subheading on its own line (kept with
+    the next paragraph); ``content``, if given, goes **a capo** as a justified
+    body paragraph. Use this for inline dispositive verbs that would otherwise
+    bundle their continuation on the same line, e.g.::
+
+        disposition("CHIEDE ALTRESÌ", "ai sensi dell'art. 229 CPI ...")
+
+    Returns a list of Blocks; splice it directly into ``body_blocks`` (the
+    renderer flattens nested block lists).
+    """
+    blocks: list[Block] = [Block(BlockKind.HEADING_LEFT, verb)]
+    if content is not None and _plain(content).strip():
+        blocks.append(Block(BlockKind.PARAGRAPH, content))
+    return blocks
 
 
 # ---------------------------------------------------------------------------
@@ -284,6 +308,18 @@ def _coerce_block(item) -> Block:
     return Block(BlockKind.PARAGRAPH, item)
 
 
+def _flatten_blocks(body_blocks) -> list[Block]:
+    """Expand nested block lists (e.g. produced by :func:`disposition`) into a
+    flat list of Blocks, coercing bare strings/Spans to paragraphs."""
+    out: list[Block] = []
+    for raw in body_blocks:
+        if isinstance(raw, list) and all(isinstance(x, Block) for x in raw):
+            out.extend(raw)
+        else:
+            out.append(_coerce_block(raw))
+    return out
+
+
 def _emit_delivery(document: Document, letter: LetterDocument) -> None:
     _add_paragraph(
         document, letter.delivery_method,
@@ -422,8 +458,7 @@ def _emit_opening(document: Document, letter: LetterDocument) -> None:
 
 
 def _emit_body(document: Document, letter: LetterDocument) -> None:
-    for raw in letter.body_blocks:
-        block = _coerce_block(raw)
+    for block in _flatten_blocks(letter.body_blocks):
         text = _plain(block.content)
         if _DIVIDER_RE.match(text):
             continue  # STYLE_011: drop decorative dividers
@@ -516,8 +551,8 @@ def collect_warnings(letter: LetterDocument) -> list[str]:
         texts.append(_plain(line))
     texts.append(_plain(letter.subject))
     texts.append(_plain(letter.opening))
-    for raw in letter.body_blocks:
-        texts.append(_plain(_coerce_block(raw).content))
+    for block in _flatten_blocks(letter.body_blocks):
+        texts.append(_plain(block.content))
     for line in letter.signature_block:
         texts.append(_plain(line))
     for line in letter.attachments:
@@ -616,6 +651,7 @@ __all__ = [
     "section_heading",
     "subheading",
     "list_item",
+    "disposition",
     "normalize_text",
     "collect_warnings",
     "render_letter",

@@ -30,6 +30,7 @@ from formatters.letters import (
     LetterDocument,
     Span,
     SubjectStyle,
+    disposition,
     list_item,
     paragraph,
     render_letter,
@@ -167,11 +168,44 @@ def example_informativa_with_placeholder() -> LetterDocument:
     )
 
 
+def example_istanza_ritiro() -> LetterDocument:
+    """Formal istanza with NO salutation, a ritual centered verb (DICHIARA) and
+    two dispositive 'titoletti' (MOTIVA, CHIEDE ALTRESÌ) whose content goes a
+    capo (structure inspired by corpus 004). Fictional data."""
+    return LetterDocument(
+        recipient_block=[
+            "Tramite servizio online / PEC a:",
+            "ufficio.esempio@pec.example.it",
+            "Spett.le",
+            "Ufficio di Esempio",
+        ],
+        subject="OGGETTO: Ritiro della domanda di esempio n. 0000",
+        opening=None,  # istanza formale: nessun saluto
+        body_blocks=[
+            paragraph("Esempio S.r.l., in persona del legale rappresentante,"),
+            section_heading("DICHIARA"),
+            paragraph("di voler ritirare la domanda di cui in oggetto."),
+            subheading("MOTIVA il ritiro come segue."),
+            paragraph("La richiedente ha rivisto la propria strategia."),
+            *disposition(
+                "CHIEDE ALTRESÌ",
+                "il rimborso delle tasse versate, ove rimborsabili.",
+            ),
+        ],
+        closing="In fede,",
+        signature_block=[
+            Span("Avv. Matteo Bertocchi", bold=True),
+            "(Firma digitale)",
+        ],
+    )
+
+
 EXAMPLES = {
     "diffida": example_diffida,
     "email_comunicazione": example_email_comunicazione,
     "contestazione_pec": example_contestazione_pec,
     "informativa": example_informativa_with_placeholder,
+    "istanza_ritiro": example_istanza_ritiro,
 }
 
 
