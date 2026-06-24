@@ -1,160 +1,206 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Revisione formattazione lettere — Bergamo Legal (lettera fittizia)</title>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisione formattazione — Bergamo Legal (lettera fittizia)</title>
 <style>
-  :root{--ink:#1c2430;--muted:#5b6675;--line:#d8dde5;--bg:#f4f6f9}
+  :root{--ink:#1b2330;--muted:#64707f;--line:#e2e7ee;--bg:#eef1f5;--paper:#fff}
   *{box-sizing:border-box} html,body{margin:0}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
-  .topbar{padding:18px 24px;border-bottom:1px solid var(--line);background:#fff}
-  .topbar h1{font-size:18px;margin:0 0 4px} .topbar p{margin:0;color:var(--muted);font-size:13px;max-width:78ch}
-  .hint{margin-top:8px;font-size:12px;color:var(--muted)}
-  .layout{display:grid;grid-template-columns:minmax(300px,360px) 1fr}
-  .legend{position:sticky;top:0;max-height:100vh;overflow:auto;padding:16px;border-right:1px solid var(--line);background:#fff}
-  .legend h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:4px 0 10px}
-  .paper-wrap{padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px}
-  .page{width:760px;max-width:100%;border:1px solid var(--line);box-shadow:0 2px 14px rgba(20,30,45,.08);background:#fff}
-  .cap{font-size:12px;color:var(--muted);max-width:760px}
-  .item{display:flex;gap:10px;padding:9px 8px;border-radius:8px;outline:none;border:1px solid transparent}
+  .top{padding:16px 24px;border-bottom:1px solid var(--line);background:#fff}
+  .top h1{font-size:17px;margin:0 0 3px;letter-spacing:.01em} .top p{margin:0;color:var(--muted);font-size:12.5px;max-width:80ch}
+  .layout{display:grid;grid-template-columns:340px 1fr;gap:0;align-items:start}
+  .legend{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:14px;border-right:1px solid var(--line);background:#fff}
+  .legend h2{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:2px 0 10px}
+  .paper-wrap{padding:26px 26px 60px;display:flex;flex-direction:column;align-items:center;gap:18px}
+  .pagewrap{position:relative;width:740px;max-width:100%;line-height:0}
+  .page{width:100%;display:block;border:1px solid var(--line);box-shadow:0 3px 18px rgba(20,30,45,.10);background:#fff}
+  .rg{position:absolute;border-radius:3px;cursor:pointer;outline:none;background:transparent;transition:background .12s,box-shadow .12s}
+  .rg:hover,.rg:focus,.rg.on{background:rgba(var(--c),.20);box-shadow:0 0 0 2px rgba(var(--c),.85)}
+  .item{display:flex;gap:10px;padding:8px;border-radius:9px;outline:none;border:1px solid transparent;cursor:pointer}
   .item+.item{margin-top:2px}
-  .item:hover,.item:focus,.item:focus-within{background:rgba(var(--c),.10);border-color:rgba(var(--c),.45)}
+  .item:hover,.item:focus,.item.on{background:rgba(var(--c),.10);border-color:rgba(var(--c),.5)}
   .item:focus{box-shadow:0 0 0 2px rgba(var(--c),.55)}
-  .swatch{flex:0 0 14px;height:14px;margin-top:3px;border-radius:4px;border:1px solid}
-  .meta{min-width:0} .label{font-weight:600;font-size:13.5px}
-  .label .tag{font-weight:500;font-size:10.5px;color:var(--muted);margin-left:6px}
-  .sum{font-size:12px;color:var(--muted);margin-top:1px}
-  .details{display:none;margin-top:8px;border-top:1px dashed rgba(var(--c),.5);padding-top:8px;font-size:12px}
-  .item:hover .details,.item:focus .details,.item:focus-within .details{display:block}
-  .details dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0}
-  .details dt{color:var(--muted)} .details dd{margin:0}
-  .details .note{margin-top:6px;color:#475569}
-  .lkbar{font-size:11px;color:var(--muted);line-height:1.9}
-  .lk{display:inline-block;width:10px;height:10px;border-radius:2px;border:1px solid;margin:0 4px 0 10px;vertical-align:middle}
-  @media (max-width:880px){.layout{grid-template-columns:1fr} .legend{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--line)} .page{width:100%}}
-  @media print{body{background:#fff} .layout{display:block} .legend{position:static;max-height:none;border:none} .details{display:block !important} .page{box-shadow:none}}
-</style>
-</head>
+  .dot{flex:0 0 12px;height:12px;margin-top:4px;border-radius:3px;background:rgb(var(--c))}
+  .meta{min-width:0} .label{font-weight:600;font-size:13px}
+  .label .tag{font-weight:600;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:rgb(var(--c));margin-left:6px}
+  .sum{font-size:11.5px;color:var(--muted);margin-top:1px}
+  .details{display:none;margin-top:7px;border-top:1px dashed rgba(var(--c),.5);padding-top:7px;font-size:11.5px}
+  .item:hover .details,.item:focus .details,.item.on .details{display:block}
+  .details dl{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:0}
+  .details dt{color:var(--muted)} .details dd{margin:0} .details .note{margin-top:5px;color:#475569}
+  #wires{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+  @media (max-width:900px){.layout{grid-template-columns:1fr} .legend{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--line)} #wires{display:none}}
+  @media print{body{background:#fff} .layout{display:block} .legend{position:static;max-height:none;border:none} .details{display:block !important} #wires{display:none} .page{box-shadow:none}}
+</style></head>
 <body>
-<header class="topbar">
+<header class="top">
   <h1>Revisione formattazione — Lettere Bergamo Legal</h1>
-  <p>Anteprima di una <strong>lettera fittizia</strong> (contenuto inventato).
-     <strong>L'immagine è il render reale del DOCX prodotto dal formatter</strong>
-     (DOCX → PDF via LibreOffice → immagine): font, impaginazione, intestazione e
-     piè di pagina sono quelli effettivi. Le sezioni sono evidenziate con i colori
-     della legenda; passa il mouse o porta il focus su una voce per i dettagli
-     (letti dal documento reale).</p>
-  <div class="lkbar"><span class="lk" style="background:#DCE0E5;border-color:rgb(100, 116, 139)"></span>Intestazione (letterhead) &nbsp;<span class="lk" style="background:#F3E5C7;border-color:rgb(202, 138, 4)"></span>Metodo di trasmissione &nbsp;<span class="lk" style="background:#C9E7E4;border-color:rgb(13, 148, 136)"></span>Data e luogo &nbsp;<span class="lk" style="background:#D8D6F9;border-color:rgb(79, 70, 229)"></span>Destinatario &nbsp;<span class="lk" style="background:#F8CDD6;border-color:rgb(225, 29, 72)"></span>OGGETTO — etichetta &nbsp;<span class="lk" style="background:#F7CFE1;border-color:rgb(219, 39, 119)"></span>OGGETTO — contenuto &nbsp;<span class="lk" style="background:#CBEAD7;border-color:rgb(22, 163, 74)"></span>Apertura (saluto) &nbsp;<span class="lk" style="background:#CFDCFA;border-color:rgb(37, 99, 235)"></span>Paragrafo di corpo &nbsp;<span class="lk" style="background:#E2D3FB;border-color:rgb(124, 58, 237)"></span>Titoletto a sinistra &nbsp;<span class="lk" style="background:#FADAC9;border-color:rgb(234, 88, 12)"></span>Titolo rituale centrato &nbsp;<span class="lk" style="background:#C8E6EE;border-color:rgb(8, 145, 178)"></span>Voce di elenco &nbsp;<span class="lk" style="background:#DDEAC9;border-color:rgb(101, 163, 13)"></span>Congedo &nbsp;<span class="lk" style="background:#E7D4C9;border-color:rgb(146, 64, 14)"></span>Blocco firma &nbsp;<span class="lk" style="background:#EACDED;border-color:rgb(162, 28, 175)"></span>Allegati &nbsp;<span class="lk" style="background:#D6D9DE;border-color:rgb(71, 85, 105)"></span>Postilla / disclaimer &nbsp;<span class="lk" style="background:#DCE0E5;border-color:rgb(100, 116, 139)"></span>Piè di pagina &nbsp;</div>
-  <p class="hint">Documento pulito: <code>out/lettera_fittizia.docx</code> e
-     <code>out/lettera_fittizia.pdf</code>. In stampa/PDF i dettagli della legenda sono espansi.</p>
+  <p>Lettera <strong>fittizia</strong> resa dal formatter (DOCX → PDF → immagine): font e
+     impaginazione sono quelli reali. Passa il mouse o usa <kbd>Tab</kbd> su una voce della
+     legenda o su una zona della lettera: le parti corrispondenti si evidenziano a vicenda e
+     una linea le collega. Documenti puliti: <code>out/lettera_fittizia.docx</code> / <code>.pdf</code>.</p>
 </header>
+<svg id="wires" aria-hidden="true"></svg>
 <div class="layout">
-  <aside class="legend" aria-label="Legenda delle sezioni di formattazione">
+  <aside class="legend" aria-label="Legenda delle sezioni">
     <h2>Sezioni della lettera</h2>
-    <div class="item" tabindex="0" style="--c:100,116,139">
-      <span class="swatch" style="background:#DCE0E5;border-color:rgb(100,116,139)" aria-hidden="true"></span>
-      <div class="meta"><div class="label">Intestazione (letterhead) <span class="tag">Ereditato dal template</span></div>
-        <div class="sum">Ereditato dal template (Garamond). Non generato dal corpo.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Template_Vuoto.docx — <strong>non</strong> generato dallo script</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>14 pt / 16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>A4; margine superiore 5.91 cm</dd></dl><div class="note">Carta intestata (logo + “BERGAMO LEGAL”) ereditata dal template; il corpo non la duplica.</div></div></div>
+    <div class="item" data-k="header" tabindex="0" style="--c:100,116,139">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="meta"><div class="label">Intestazione (letterhead) <span class="tag">Ereditato</span></div>
+        <div class="sum">Ereditato dal template (Garamond).</div><div class="details"><dl><dt>Provenienza</dt><dd>Template (non generato dallo script)</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>14 pt / 16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine sup. 5.91 cm</dd></dl><div class="note">Carta intestata ereditata dal template; il corpo non la duplica.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:202,138,4">
-      <span class="swatch" style="background:#F3E5C7;border-color:rgb(202,138,4)" aria-hidden="true"></span>
+    <div class="item" data-k="delivery" tabindex="0" style="--c:202,138,4">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Metodo di trasmissione</div>
-        <div class="sum">sinistra, 12 pt, corsivo.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Reso solo se fornito. Variante: può essere la prima riga del destinatario.</div></div></div>
+        <div class="sum">sinistra, 12 pt, corsivo.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Reso solo se fornito. Può anche essere la prima riga del destinatario.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:13,148,136">
-      <span class="swatch" style="background:#C9E7E4;border-color:rgb(13,148,136)" aria-hidden="true"></span>
+    <div class="item" data-k="date" tabindex="0" style="--c:13,148,136">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Data e luogo</div>
-        <div class="sum">destra, 12 pt.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 6 pt / dopo 10 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Resa solo se fornita; lo script non inventa una data assente.</div></div></div>
+        <div class="sum">destra, 12 pt.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 6 / dopo 10 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Resa solo se fornita; lo script non inventa una data assente.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:79,70,229">
-      <span class="swatch" style="background:#D8D6F9;border-color:rgb(79,70,229)" aria-hidden="true"></span>
+    <div class="item" data-k="recipient" tabindex="0" style="--c:79,70,229">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Destinatario</div>
-        <div class="sum">sinistra, 12 pt, grassetto, rientro 8.5 cm.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Rientro sx</dt><dd>8.5 cm</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Appellativo personale unito al nome (“Egr. Sig. Mario Rossi”); “Spett.le” davanti a società resta su riga propria.</div></div></div>
+        <div class="sum">sinistra, 12 pt, grassetto, rientro 8.5 cm.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Rientro sx</dt><dd>8.5 cm</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Appellativo personale unito al nome (“Egr. Sig. Mario Rossi”); “Spett.le” davanti a società resta su riga propria.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:225,29,72">
-      <span class="swatch" style="background:#F8CDD6;border-color:rgb(225,29,72)" aria-hidden="true"></span>
-      <div class="meta"><div class="label">OGGETTO — etichetta <span class="tag">Punto sensibile · Da approvare</span></div>
-        <div class="sum">centrato, 16 pt, grassetto.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 10 pt / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Punto sensibile (feedback Trustpilot v3 / 027): etichetta come titolo centrato; lasciata come scritta, non forzata in maiuscolo.</div></div></div>
+    <div class="item" data-k="ogglabel" tabindex="0" style="--c:225,29,72">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="meta"><div class="label">OGGETTO — etichetta <span class="tag">Punto sensibile</span></div>
+        <div class="sum">centrato, 16 pt, grassetto.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 10 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Punto sensibile (feedback 027): etichetta come titolo centrato, lasciata come scritta.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:219,39,119">
-      <span class="swatch" style="background:#F7CFE1;border-color:rgb(219,39,119)" aria-hidden="true"></span>
-      <div class="meta"><div class="label">OGGETTO — contenuto <span class="tag">Punto sensibile · Da approvare</span></div>
-        <div class="sum">giustificato, 12 pt, grassetto.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">La contestazione su 027 era il contenuto centrato invece che giustificato: ora è giustificato.</div></div></div>
+    <div class="item" data-k="oggbody" tabindex="0" style="--c:219,39,119">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="meta"><div class="label">OGGETTO — contenuto <span class="tag">Punto sensibile</span></div>
+        <div class="sum">giustificato, 12 pt, grassetto.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">La contestazione su 027 era il contenuto centrato invece che giustificato: ora è giustificato.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:22,163,74">
-      <span class="swatch" style="background:#CBEAD7;border-color:rgb(22,163,74)" aria-hidden="true"></span>
+    <div class="item" data-k="opening" tabindex="0" style="--c:22,163,74">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Apertura (saluto)</div>
-        <div class="sum">giustificato, 12 pt, grassetto.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 8 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Formale → grassetto + giustificato; stile e-mail → tondo + sinistra. Reso solo se fornito.</div></div></div>
+        <div class="sum">giustificato, 12 pt, grassetto.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 8 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Formale → grassetto + giustificato; e-mail → tondo + sinistra. Reso solo se fornito.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:37,99,235">
-      <span class="swatch" style="background:#CFDCFA;border-color:rgb(37,99,235)" aria-hidden="true"></span>
+    <div class="item" data-k="body" tabindex="0" style="--c:37,99,235">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Paragrafo di corpo</div>
-        <div class="sum">giustificato, 12 pt.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Normalizzazione: “–/—” → “-”; divisori “***” rimossi.</div></div></div>
+        <div class="sum">giustificato, 12 pt.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Normalizzazione: “–/—” → “-”; divisori “***” rimossi.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:124,58,237">
-      <span class="swatch" style="background:#E2D3FB;border-color:rgb(124,58,237)" aria-hidden="true"></span>
+    <div class="item" data-k="subhead" tabindex="0" style="--c:124,58,237">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Titoletto a sinistra</div>
-        <div class="sum">sinistra, 14 pt, grassetto.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>14 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 12 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “Fatto”, “Diritto”, “MOTIVA …”; i verbi dispositivi (“CHIEDE ALTRESÌ”) usano titoletto + contenuto a capo.</div></div></div>
+        <div class="sum">sinistra, 14 pt, grassetto.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>14 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 12 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “Fatto”, “MOTIVA …”; i verbi dispositivi usano titoletto + contenuto a capo.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:234,88,12">
-      <span class="swatch" style="background:#FADAC9;border-color:rgb(234,88,12)" aria-hidden="true"></span>
+    <div class="item" data-k="ritual" tabindex="0" style="--c:234,88,12">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Titolo rituale centrato</div>
-        <div class="sum">centrato, 16 pt, grassetto.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 14 pt / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “IN FATTO”, “DICHIARA”, “DIFFIDA”, “PREMESSO CHE”, “INVITA”.</div></div></div>
+        <div class="sum">centrato, 16 pt, grassetto.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 14 / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “IN FATTO”, “DICHIARA”, “DIFFIDA”, “PREMESSO CHE”, “INVITA”.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:8,145,178">
-      <span class="swatch" style="background:#C8E6EE;border-color:rgb(8,145,178)" aria-hidden="true"></span>
+    <div class="item" data-k="list" tabindex="0" style="--c:8,145,178">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Voce di elenco</div>
-        <div class="sum">giustificato, 12 pt, rientro 0.5 cm.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Rientro sx</dt><dd>0.5 cm</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Marcatore ((i)/(a)/•) incluso nel testo.</div></div></div>
+        <div class="sum">giustificato, 12 pt, rientro 0.5 cm.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Rientro sx</dt><dd>0.5 cm</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Marcatore ((i)/(a)/•) incluso nel testo.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:101,163,13">
-      <span class="swatch" style="background:#DDEAC9;border-color:rgb(101,163,13)" aria-hidden="true"></span>
+    <div class="item" data-k="closing" tabindex="0" style="--c:101,163,13">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Congedo</div>
-        <div class="sum">destra, 12 pt.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Stesso lato della firma (destra).</div></div></div>
+        <div class="sum">destra, 12 pt.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Stesso lato della firma (destra).</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:146,64,14">
-      <span class="swatch" style="background:#E7D4C9;border-color:rgb(146,64,14)" aria-hidden="true"></span>
+    <div class="item" data-k="signature" tabindex="0" style="--c:146,64,14">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Blocco firma <span class="tag">Da approvare</span></div>
-        <div class="sum">destra, 12 pt.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 18 pt / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Nomi firmatari in grassetto; “(Firma digitale)” in corsivo; spaziatura ariosa — da approvare.</div></div></div>
+        <div class="sum">destra, 12 pt.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 18 / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Nomi firmatari in grassetto; “(Firma digitale)” in corsivo; spaziatura ariosa — da approvare.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:162,28,175">
-      <span class="swatch" style="background:#EACDED;border-color:rgb(162,28,175)" aria-hidden="true"></span>
+    <div class="item" data-k="attach" tabindex="0" style="--c:162,28,175">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Allegati</div>
-        <div class="sum">sinistra, 12 pt, grassetto.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 pt / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">“Allegati:” in grassetto; voci rientrate. Reso solo se presente.</div></div></div>
+        <div class="sum">sinistra, 12 pt, grassetto.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">“Allegati:” in grassetto; voci rientrate.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:71,85,105">
-      <span class="swatch" style="background:#D6D9DE;border-color:rgb(71,85,105)" aria-hidden="true"></span>
+    <div class="item" data-k="post" tabindex="0" style="--c:71,85,105">
+      <span class="dot" aria-hidden="true"></span>
       <div class="meta"><div class="label">Postilla / disclaimer</div>
-        <div class="sum">destra, 10 pt, corsivo.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 4 pt / dopo 0 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Piccola, in corsivo. Resa solo se presente.</div></div></div>
+        <div class="sum">destra, 10 pt, corsivo.</div><div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 4 / dopo 0 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Piccola, in corsivo.</div></div></div>
     </div>
-    <div class="item" tabindex="0" style="--c:100,116,139">
-      <span class="swatch" style="background:#DCE0E5;border-color:rgb(100,116,139)" aria-hidden="true"></span>
-      <div class="meta"><div class="label">Piè di pagina <span class="tag">Ereditato dal template</span></div>
-        <div class="sum">Ereditato dal template (Garamond). Non generato dal corpo.</div>
-        <div class="details"><dl><dt>Provenienza</dt><dd>Template_Vuoto.docx — <strong>non</strong> generato dallo script</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine inferiore 4.54 cm</dd></dl><div class="note">Dati di registrazione dello Studio, ereditati dal template (non generati).</div></div></div>
+    <div class="item" data-k="footer" tabindex="0" style="--c:100,116,139">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="meta"><div class="label">Piè di pagina <span class="tag">Ereditato</span></div>
+        <div class="sum">Ereditato dal template (Garamond).</div><div class="details"><dl><dt>Provenienza</dt><dd>Template (non generato dallo script)</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine inf. 4.54 cm</dd></dl><div class="note">Dati di registrazione dello Studio, ereditati dal template.</div></div></div>
     </div>
   </aside>
   <main class="paper-wrap">
-        <img class="page" src="lettera_fittizia_review-1.png" alt="Lettera fittizia — pagina 1 (render reale del DOCX)">
-        <img class="page" src="lettera_fittizia_review-2.png" alt="Lettera fittizia — pagina 2 (render reale del DOCX)">
-    <div class="cap">Render reale del DOCX (LibreOffice, 150 dpi). Le bande colorate
-      sono applicate a una copia per la sola revisione; il documento consegnabile
-      (<code>out/lettera_fittizia.docx</code> / <code>.pdf</code>) è senza evidenziazioni.</div>
+      <div class="pagewrap">
+        <img class="page" src="lettera_fittizia_review-1.png" alt="Lettera fittizia — pagina 1 (render reale)">
+        <div class="rg" data-k="header" tabindex="0" title="Intestazione (letterhead)" style="left:9.34%;top:3.66%;width:28.27%;height:16.85%;--c:100,116,139"></div>
+        <div class="rg" data-k="delivery" tabindex="0" title="Metodo di trasmissione" style="left:9.34%;top:20.13%;width:41.58%;height:1.86%;--c:202,138,4"></div>
+        <div class="rg" data-k="date" tabindex="0" title="Data e luogo" style="left:69.25%;top:22.72%;width:21.45%;height:1.86%;--c:13,148,136"></div>
+        <div class="rg" data-k="recipient" tabindex="0" title="Destinatario" style="left:49.81%;top:25.54%;width:29.40%;height:7.49%;--c:79,70,229"></div>
+        <div class="rg" data-k="ogglabel" tabindex="0" title="OGGETTO — etichetta" style="left:42.50%;top:34.02%;width:15.02%;height:2.39%;--c:225,29,72"></div>
+        <div class="rg" data-k="oggbody" tabindex="0" title="OGGETTO — contenuto" style="left:9.34%;top:36.66%;width:56.23%;height:1.86%;--c:219,39,119"></div>
+        <div class="rg" data-k="opening" tabindex="0" title="Apertura (saluto)" style="left:9.34%;top:39.25%;width:14.72%;height:1.86%;--c:22,163,74"></div>
+        <div class="rg" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:41.60%;width:81.44%;height:3.50%;--c:37,99,235"></div>
+        <div class="rg" data-k="subhead" tabindex="0" title="Titoletto a sinistra" style="left:9.34%;top:46.32%;width:5.75%;height:2.13%;--c:124,58,237"></div>
+        <div class="rg" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:48.93%;width:81.27%;height:7.49%;--c:37,99,235"></div>
+        <div class="rg" data-k="ritual" tabindex="0" title="Titolo rituale centrato" style="left:44.22%;top:57.89%;width:11.59%;height:2.39%;--c:234,88,12"></div>
+        <div class="rg" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:61.00%;width:32.84%;height:1.86%;--c:37,99,235"></div>
+        <div class="rg" data-k="list" tabindex="0" title="Voce di elenco" style="left:11.72%;top:63.35%;width:78.89%;height:5.62%;--c:8,145,178"></div>
+        <div class="rg" data-k="body" tabindex="0" title="Paragrafo di corpo" style="left:9.34%;top:69.22%;width:81.23%;height:3.50%;--c:37,99,235"></div>
+        <div class="rg" data-k="closing" tabindex="0" title="Congedo" style="left:35.27%;top:74.40%;width:55.38%;height:1.86%;--c:101,163,13"></div>
+        <div class="rg" data-k="signature" tabindex="0" title="Blocco firma" style="left:56.49%;top:78.18%;width:34.19%;height:1.86%;--c:146,64,14"></div>
+        <div class="rg" data-k="footer" tabindex="0" title="Piè di pagina" style="left:9.34%;top:84.97%;width:81.36%;height:11.64%;--c:100,116,139"></div>
+      </div>
+      <div class="pagewrap">
+        <img class="page" src="lettera_fittizia_review-2.png" alt="Lettera fittizia — pagina 2 (render reale)">
+        <div class="rg" data-k="header" tabindex="0" title="Intestazione (letterhead)" style="left:9.34%;top:3.66%;width:28.27%;height:16.85%;--c:100,116,139"></div>
+        <div class="rg" data-k="signature" tabindex="0" title="Blocco firma" style="left:59.05%;top:20.13%;width:31.65%;height:3.74%;--c:146,64,14"></div>
+        <div class="rg" data-k="attach" tabindex="0" title="Allegati" style="left:9.34%;top:25.54%;width:51.11%;height:5.97%;--c:162,28,175"></div>
+        <div class="rg" data-k="post" tabindex="0" title="Postilla / disclaimer" style="left:45.49%;top:31.76%;width:45.01%;height:1.60%;--c:71,85,105"></div>
+        <div class="rg" data-k="footer" tabindex="0" title="Piè di pagina" style="left:9.34%;top:84.97%;width:81.36%;height:11.64%;--c:100,116,139"></div>
+      </div>
   </main>
 </div>
-</body>
-</html>
+<script>
+(function(){
+  var KEYS=['header', 'delivery', 'date', 'recipient', 'ogglabel', 'oggbody', 'opening', 'body', 'subhead', 'ritual', 'list', 'closing', 'signature', 'attach', 'post', 'footer'];
+  function all(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
+  var svg=document.getElementById('wires'), active=null;
+  function items(k){return all('.item[data-k="'+k+'"]');}
+  function regs(k){return all('.rg[data-k="'+k+'"]');}
+  function rgb(k){var el=items(k)[0]; return el?getComputedStyle(el).getPropertyValue('--c'):'30,40,60';}
+  function clearWire(){svg.innerHTML='';}
+  function nearestReg(k){
+    var vh=window.innerHeight, best=null, bd=1e9;
+    regs(k).forEach(function(r){var b=r.getBoundingClientRect();
+      var d=(b.top<0)? -b.top : (b.top>vh? b.top-vh : 0);
+      if(d<bd){bd=d;best=r;}});
+    return best;
+  }
+  function draw(){
+    clearWire(); if(!active) return;
+    var it=items(active)[0], rg=nearestReg(active); if(!it||!rg) return;
+    var a=it.getBoundingClientRect(), b=rg.getBoundingClientRect();
+    var x1=a.right-6, y1=a.top+a.height/2, x2=b.left+2, y2=b.top+b.height/2;
+    var mx=(x1+x2)/2;
+    var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d','M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2);
+    p.setAttribute('fill','none'); p.setAttribute('stroke','rgb('+rgb(active)+')');
+    p.setAttribute('stroke-width','2'); p.setAttribute('stroke-dasharray','5 4'); p.setAttribute('opacity','.9');
+    var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',x2);dot.setAttribute('cy',y2);dot.setAttribute('r','3.5');dot.setAttribute('fill','rgb('+rgb(active)+')');
+    svg.appendChild(p); svg.appendChild(dot);
+  }
+  function set(k,on){
+    items(k).forEach(function(e){e.classList.toggle('on',on);});
+    regs(k).forEach(function(e){e.classList.toggle('on',on);});
+  }
+  function activate(k){ if(active && active!==k) set(active,false); active=k; set(k,true); draw(); }
+  function deactivate(k){ if(active===k){set(k,false); active=null; clearWire();} }
+  function wire(el){var k=el.getAttribute('data-k');
+    el.addEventListener('mouseenter',function(){activate(k);});
+    el.addEventListener('mouseleave',function(){deactivate(k);});
+    el.addEventListener('focus',function(){activate(k);});
+    el.addEventListener('blur',function(){deactivate(k);});
+  }
+  all('.item').forEach(wire); all('.rg').forEach(wire);
+  var raf=null;
+  function onScroll(){ if(raf) return; raf=requestAnimationFrame(function(){raf=null; if(active) draw();}); }
+  window.addEventListener('scroll',onScroll,true); window.addEventListener('resize',onScroll);
+})();
+</script>
+</body></html>

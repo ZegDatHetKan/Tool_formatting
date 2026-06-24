@@ -23,16 +23,18 @@ CSS**: l'anteprima è il **render reale del DOCX** prodotto dal formatter. Il fl
    header/footer/margini dal template);
 3. **LibreOffice headless** converte il DOCX in PDF → `out/lettera_fittizia.pdf`
    (impaginazione, font, intestazione e piè di pagina effettivi);
-4. una **copia** del DOCX con sfondo colorato per sezione viene convertita in PDF
-   e poi in **immagine** (`pdftoppm`, 150 dpi): è il render reale con le sezioni
-   evidenziate, embeddato nell'HTML come `lettera_fittizia_review-N.png`;
-5. la legenda mostra i dettagli **letti dal DOCX reale** (allineamento, dimensione,
-   grassetto/corsivo, rientro, spaziatura, keep-with-next).
+4. il PDF pulito è reso in **immagine** (`pdftoppm`, 150 dpi) →
+   `lettera_fittizia_review-N.png`, embeddata nell'HTML;
+5. con `pdftotext -bbox` si estraggono le **coordinate** di ogni parola; le
+   parole sono raggruppate in righe e classificate per sezione, ottenendo i
+   **riquadri interattivi** (in % della pagina) sovrapposti all'immagine;
+6. la legenda mostra i dettagli **letti dal DOCX reale** (allineamento,
+   dimensione, grassetto/corsivo, rientro, spaziatura, keep-with-next).
 
-Quindi font, impaginazione e paginazione visibili sono quelli effettivi dello
-script (la lettera occupa 2 pagine per via dei margini ampi del template). Le
-bande colorate sono applicate **solo alla copia di revisione**; i deliverable
-puliti (`.docx`/`.pdf`) non hanno evidenziazioni.
+Quindi font, impaginazione e paginazione sono quelli effettivi dello script (la
+lettera occupa 2 pagine per i margini ampi del template). L'immagine è **pulita**
+(senza colori); le evidenziazioni sono **interattive**, disegnate sopra
+l'immagine solo al passaggio del mouse/focus.
 
 ### Nota sui font del rendering
 
@@ -123,15 +125,17 @@ approvare”, “Punto sensibile”, “Ereditato dal template”, “Generato d
 
 ## Interazione e accessibilità
 
-- Dettagli completi rivelati su **hover** del mouse **e** su **focus** da
-  tastiera (voci di legenda e sezioni della lettera sono focusabili con `Tab`).
-- Evidenziazione reciproca: attivando una voce di legenda si evidenzia la sezione
-  corrispondente nella lettera, e viceversa (colore condiviso sempre visibile +
-  rinforzo al focus/hover).
-- In **stampa/PDF** tutti i dettagli sono espansi e le evidenziazioni restano
-  visibili (media query dedicata).
-- Layout responsive: legenda fissa a sinistra su desktop, sopra la lettera su
-  mobile.
+- **Riquadri interattivi precisi** sovrapposti all'immagine: ricavati dalle
+  coordinate reali del PDF (`pdftotext -bbox`), coprono esattamente ogni sezione.
+- **Evidenziazione reciproca**: passando mouse/focus su una voce di legenda si
+  evidenzia la zona corrispondente nella lettera, e viceversa.
+- **Linea di collegamento**: una linea tratteggiata (nel colore della sezione)
+  unisce la voce di legenda alla zona della lettera; si **ridisegna allo scroll**
+  e punta sempre alla zona più vicina nel viewport.
+- Dettagli completi su **hover** e su **focus** da tastiera (tutto focusabile con `Tab`).
+- In **stampa/PDF** i dettagli sono espansi e le linee nascoste (media query).
+- Layout responsive: legenda a sinistra su desktop (sticky), sopra la lettera su
+  mobile (linee disattivate su schermi piccoli).
 
 ## Esito checklist di accettazione
 
