@@ -14,26 +14,34 @@ dal template. La pagina si apre direttamente come file statico (nessun build).
 
 ## Come è stata prodotta (importante)
 
-La lettera fittizia **non è HTML disegnato a mano**: è **generata dal formatter**.
-Il flusso è:
+La lettera fittizia **non è HTML disegnato a mano** e **non è una ricostruzione
+CSS**: l'anteprima è il **render reale del DOCX** prodotto dal formatter. Il flusso
+(`tool/scripts/build_review_html.py`):
 
 1. si inventa il contenuto fittizio e si costruisce un `LetterDocument`;
-2. lo si passa a `render_letter` → `out/html/lettera_fittizia.docx` (DOCX reale,
-   formattato dallo script, eredita header/footer/margini dal template);
-3. si **rilegge** il `.docx` e si emette l'HTML usando le proprietà **effettive**
-   di ogni paragrafo (allineamento, dimensione, grassetto/corsivo, rientro,
-   spaziatura, keep-with-next).
+2. `render_letter` → `out/lettera_fittizia.docx` (DOCX reale, eredita
+   header/footer/margini dal template);
+3. **LibreOffice headless** converte il DOCX in PDF → `out/lettera_fittizia.pdf`
+   (impaginazione, font, intestazione e piè di pagina effettivi);
+4. una **copia** del DOCX con sfondo colorato per sezione viene convertita in PDF
+   e poi in **immagine** (`pdftoppm`, 150 dpi): è il render reale con le sezioni
+   evidenziate, embeddato nell'HTML come `lettera_fittizia_review-N.png`;
+5. la legenda mostra i dettagli **letti dal DOCX reale** (allineamento, dimensione,
+   grassetto/corsivo, rientro, spaziatura, keep-with-next).
 
-Quindi l'anteprima e i dettagli della legenda riflettono ciò che lo script
-produce davvero, non un'approssimazione. Lo script di generazione è
-`tool/scripts/build_review_html.py` (rilancia per rigenerare).
+Quindi font, impaginazione e paginazione visibili sono quelli effettivi dello
+script (la lettera occupa 2 pagine per via dei margini ampi del template). Le
+bande colorate sono applicate **solo alla copia di revisione**; i deliverable
+puliti (`.docx`/`.pdf`) non hanno evidenziazioni.
 
 ## File prodotti
 
-- `out/html/lettera_fittizia.docx` — la lettera fittizia **formattata dal tool**.
-- `out/html/lettera_fittizia_review.html` — l'artefatto di review (generato dal `.docx`).
+- `out/lettera_fittizia.docx` — lettera fittizia **formattata dal tool** (pulita).
+- `out/lettera_fittizia.pdf` — stessa lettera in PDF (render LibreOffice, pulita).
+- `out/html/lettera_fittizia_review-1.png`, `-2.png` — render reale con sezioni evidenziate.
+- `out/html/lettera_fittizia_review.html` — artefatto di review (embedda le immagini + legenda).
 - `out/html/lettera_fittizia_review_report.md` — questo report.
-- `tool/scripts/build_review_html.py` — generatore (render + estrazione + HTML).
+- `tool/scripts/build_review_html.py` — generatore (render → PDF → immagine → HTML).
 
 ## Contenuto fittizio (nessun dato reale)
 
@@ -117,7 +125,7 @@ approvare”, “Punto sensibile”, “Ereditato dal template”, “Generato d
 
 - ✔ ogni voce di legenda ha una sezione evidenziata corrispondente (16/16);
 - ✔ ogni sezione evidenziata ha una voce di legenda (16 chiavi, corrispondenza piena);
-- ✔ la lettera è prodotta da `render_letter` (DOCX reale) e l'HTML ne legge i valori;
+- ✔ l'anteprima è il **render reale** del DOCX (DOCX → PDF LibreOffice → immagine), non CSS;
 - ✔ ogni voce espone i dettagli completi su hover e focus;
 - ✔ la lettera fittizia include tutti i tipi di sezione richiesti;
 - ✔ la pagina si apre come file HTML statico, senza build;

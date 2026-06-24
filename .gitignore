@@ -3,9 +3,11 @@
 /feedback.md
 /documenti_generati/storiche/
 
-# Generated letter outputs (keep only the fictional client-review artifact)
+# Generated letter outputs (keep only the fictional client-review artifacts)
 /out/*
 !/out/html/
+!/out/lettera_fittizia.docx
+!/out/lettera_fittizia.pdf
 
 # Local virtualenv
 /.venv/
