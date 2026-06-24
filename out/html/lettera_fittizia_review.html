@@ -5,548 +5,254 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revisione formattazione lettere — Bergamo Legal (lettera fittizia)</title>
 <style>
-  :root{
-    --ink:#1c2430; --muted:#5b6675; --line:#d8dde5; --bg:#f4f6f9; --paper:#ffffff;
-    --accent:#2f3a4a;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    color:var(--ink); background:var(--bg); line-height:1.45;
-  }
-  /* ---- color map (R,G,B): one quiet hue per section, neighbours distinct ---- */
-  .c-header   {--c:100,116,139}
-  .c-delivery {--c:202,138,4}
-  .c-date     {--c:13,148,136}
+  :root{--ink:#1c2430;--muted:#5b6675;--line:#d8dde5;--bg:#f4f6f9;--paper:#fff}
+  *{box-sizing:border-box} html,body{margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
+  .c-header{--c:100,116,139}
+  .c-delivery{--c:202,138,4}
+  .c-date{--c:13,148,136}
   .c-recipient{--c:79,70,229}
-  .c-ogglabel {--c:225,29,72}
-  .c-oggbody  {--c:219,39,119}
-  .c-opening  {--c:22,163,74}
-  .c-body     {--c:37,99,235}
-  .c-subhead  {--c:124,58,237}
-  .c-ritual   {--c:234,88,12}
-  .c-list     {--c:8,145,178}
-  .c-closing  {--c:101,163,13}
+  .c-ogglabel{--c:225,29,72}
+  .c-oggbody{--c:219,39,119}
+  .c-opening{--c:22,163,74}
+  .c-body{--c:37,99,235}
+  .c-subhead{--c:124,58,237}
+  .c-ritual{--c:234,88,12}
+  .c-list{--c:8,145,178}
+  .c-closing{--c:101,163,13}
   .c-signature{--c:146,64,14}
-  .c-attach   {--c:162,28,175}
-  .c-post     {--c:71,85,105}
-  .c-footer   {--c:100,116,139}
-
-  /* ---- top bar ---- */
+  .c-attach{--c:162,28,175}
+  .c-post{--c:71,85,105}
+  .c-footer{--c:100,116,139}
   .topbar{padding:18px 24px;border-bottom:1px solid var(--line);background:#fff}
   .topbar h1{font-size:18px;margin:0 0 4px}
-  .topbar p{margin:0;color:var(--muted);font-size:13px;max-width:70ch}
+  .topbar p{margin:0;color:var(--muted);font-size:13px;max-width:74ch}
   .hint{margin-top:8px;font-size:12px;color:var(--muted)}
   .badges{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
   .badge{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted)}
-  .badge.b-inherit{border-color:#cbd5e1;background:#f1f5f9}
-  .badge.b-gen{border-color:#dbe3ef;background:#eef3fb}
-  .badge.b-sens{border-color:#f5c2cf;background:#fdeef2;color:#9f1239}
-  .badge.b-appr{border-color:#fde2b8;background:#fff7ea;color:#92660a}
-
-  /* ---- layout ---- */
-  .layout{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:0;align-items:start}
+  .layout{display:grid;grid-template-columns:minmax(300px,360px) 1fr}
   .legend{position:sticky;top:0;max-height:100vh;overflow:auto;padding:16px;border-right:1px solid var(--line);background:#fff}
   .legend h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:4px 0 10px}
   .paper-wrap{padding:28px;display:flex;justify-content:center}
-
-  /* ---- legend items ---- */
-  .item{display:flex;gap:10px;padding:9px 8px;border-radius:8px;cursor:default;outline:none;border:1px solid transparent}
+  .item{display:flex;gap:10px;padding:9px 8px;border-radius:8px;outline:none;border:1px solid transparent}
   .item+.item{margin-top:2px}
   .item:hover,.item:focus,.item.active{background:rgba(var(--c),.10);border-color:rgba(var(--c),.45)}
   .item:focus{box-shadow:0 0 0 2px rgba(var(--c),.55)}
   .swatch{flex:0 0 14px;height:14px;margin-top:3px;border-radius:4px;background:rgb(var(--c));border:1px solid rgba(0,0,0,.15)}
-  .meta{min-width:0}
-  .label{font-weight:600;font-size:13.5px}
+  .meta{min-width:0} .label{font-weight:600;font-size:13.5px}
   .label .tag{font-weight:500;font-size:10.5px;color:var(--muted);margin-left:6px}
   .sum{font-size:12px;color:var(--muted);margin-top:1px}
   .details{display:none;margin-top:8px;border-top:1px dashed rgba(var(--c),.5);padding-top:8px;font-size:12px}
   .item:hover .details,.item:focus .details,.item:focus-within .details,.item.active .details{display:block}
   .details dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0}
-  .details dt{color:var(--muted)}
-  .details dd{margin:0}
+  .details dt{color:var(--muted)} .details dd{margin:0}
   .details .note{margin-top:6px;color:#475569}
-  .details .src{margin-top:6px;font-size:11px;color:#94a3b8}
-
-  /* ---- A4 paper ---- */
-  .paper{
-    width:760px;max-width:100%;background:var(--paper);border:1px solid var(--line);
-    box-shadow:0 2px 14px rgba(20,30,45,.08);
-  }
-  /* simulated template header (inherited, Garamond) */
-  .tpl-header{
-    text-align:center;padding:26px 56px 14px;border-bottom:1px solid #eef0f3;
-    font-family:"EB Garamond",Garamond,"Times New Roman",serif;
-  }
-  .tpl-header .logo{font-size:11px;letter-spacing:.3em;color:#94a3b8}
-  .tpl-header .firm{font-size:24px;letter-spacing:.04em;margin:6px 0 0}
-  .tpl-header .sub{font-size:14px;color:#475569}
-  .tpl-header .web{font-size:13px;color:#475569;margin-top:6px}
-  .tpl-header .lawyers{font-size:13px;color:#475569;margin-top:2px}
-
-  /* letter body — simulates Times New Roman, A4 inner margins */
-  .letter{font-family:"Times New Roman",Georgia,serif;color:#10151c;
-          padding:26px 64px 30px;font-size:15px}
-  .letter .seg{display:block;border-radius:3px;padding:1px 3px;outline:none;transition:box-shadow .12s,background .12s}
-  .seg{background:rgba(var(--c),.14)}
+  .paper{width:714px;max-width:100%;background:var(--paper);border:1px solid var(--line);box-shadow:0 2px 14px rgba(20,30,45,.08)}
+  .tpl-header{text-align:center;padding:22px 48px 14px;border-bottom:1px solid #eef0f3;font-family:"Garamond",Garamond,"Times New Roman",serif}
+  .tpl-tag{display:inline-block;font-family:-apple-system,Segoe UI,sans-serif;font-size:10px;color:#64748b;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:1px 8px;margin-bottom:6px}
+  .tpl-header .firm{font-size:22px;letter-spacing:.04em}
+  .tpl-footer{margin-top:14px;border-top:1px solid #eef0f3;padding:12px 48px 20px;text-align:center;font-family:"Garamond",Garamond,"Times New Roman",serif;color:#64748b;font-size:11.5px;line-height:1.5}
+  .letter{font-family:"Times New Roman",Georgia,serif;color:#10151c;padding:20px 68px 26px}
+  .seg{display:block;border-radius:3px;padding:1px 3px;outline:none;background:rgba(var(--c),.14)}
   .seg:hover,.seg:focus,.seg.hl{background:rgba(var(--c),.30);box-shadow:0 0 0 2px rgba(var(--c),.55)}
-  .seg.inline{display:inline}
-
-  .L{text-align:left}.R{text-align:right}.C{text-align:center}.J{text-align:justify}
-  .b{font-weight:bold}.i{font-style:italic}
-  .recip{margin-left:38%}            /* simulates 8.5cm left indent on A4 */
-  .indent{margin-left:6%}            /* simulates 0.5cm list indent */
-  .sz16{font-size:18px}.sz14{font-size:16px}.sz12{font-size:15px}.sz10{font-size:12.5px}
-  .mt-s{margin-top:6px}.mt-m{margin-top:12px}.mt-l{margin-top:20px}
-
-  /* simulated template footer (inherited, Garamond) */
-  .tpl-footer{
-    margin-top:18px;border-top:1px solid #eef0f3;padding:12px 56px 22px;text-align:center;
-    font-family:"EB Garamond",Garamond,"Times New Roman",serif;color:#64748b;font-size:11.5px;line-height:1.5;
-  }
-  .tpl-tag{display:inline-block;font-family:-apple-system,Segoe UI,sans-serif;font-size:10px;
-           color:#64748b;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:1px 8px;margin-bottom:6px}
-
-  /* responsive */
-  @media (max-width:880px){
-    .layout{grid-template-columns:1fr}
-    .legend{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--line)}
-    .paper-wrap{padding:16px}
-  }
-  /* print / PDF: expand all details, drop interactivity chrome */
-  @media print{
-    body{background:#fff}
-    .topbar .hint{display:none}
-    .layout{display:block}
-    .legend{position:static;max-height:none;border:none;break-inside:avoid}
-    .details{display:block !important}
-    .paper{box-shadow:none;border:none}
-    .seg{background:rgba(var(--c),.18) !important;box-shadow:none !important}
-  }
+  @media (max-width:880px){.layout{grid-template-columns:1fr} .legend{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--line)}}
+  @media print{body{background:#fff} .topbar .hint{display:none} .layout{display:block} .legend{position:static;max-height:none;border:none} .details{display:block !important} .paper{box-shadow:none;border:none} .seg{background:rgba(var(--c),.18) !important;box-shadow:none !important}}
 </style>
 </head>
 <body>
-
 <header class="topbar">
   <h1>Revisione formattazione — Lettere Bergamo Legal</h1>
-  <p>Anteprima di una <strong>lettera fittizia</strong> (contenuto inventato a solo scopo di
-     revisione). Ogni sezione è evidenziata con il colore della legenda a sinistra. La legenda
-     mostra le regole <em>attualmente implementate</em> nel formatter: passa il mouse o porta il
-     focus con la tastiera su una voce (o sulla sezione nella lettera) per vedere tutti i dettagli.</p>
+  <p>Anteprima di una <strong>lettera fittizia</strong> (contenuto inventato).
+     <strong>La lettera è stata generata dal formatter</strong> (<code>render_letter</code>)
+     e poi riversata qui: le proprietà mostrate (allineamento, dimensione, spaziatura,
+     rientro, grassetto/corsivo, keep-with-next) sono <em>lette dal documento prodotto</em>,
+     non riscritte a mano. Passa il mouse o porta il focus con la tastiera su una voce
+     della legenda o su una sezione della lettera per i dettagli.</p>
   <div class="badges" aria-hidden="true">
-    <span class="badge b-inherit">Ereditato dal template</span>
-    <span class="badge b-gen">Generato dallo script</span>
-    <span class="badge b-sens">Punto sensibile</span>
-    <span class="badge b-appr">Da approvare</span>
+    <span class="badge">Ereditato dal template</span>
+    <span class="badge">Generato dallo script</span>
+    <span class="badge">Punto sensibile</span>
+    <span class="badge">Da approvare</span>
   </div>
-  <p class="hint">Suggerimento: <kbd>Tab</kbd> per scorrere le voci con la tastiera; i dettagli
-     compaiono al passaggio del mouse e al focus. In stampa/PDF tutti i dettagli sono espansi.</p>
+  <p class="hint">In stampa/PDF i dettagli sono espansi. Documento sorgente: <code>out/html/lettera_fittizia.docx</code>.</p>
 </header>
-
 <div class="layout">
-
-  <!-- =================== LEGEND =================== -->
   <aside class="legend" aria-label="Legenda delle sezioni di formattazione">
     <h2>Sezioni della lettera</h2>
-
     <div class="item c-header" data-k="header" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
         <div class="label">Intestazione (letterhead) <span class="tag">Ereditato dal template</span></div>
-        <div class="sum">Logo + “BERGAMO LEGAL”, Garamond. Non generato dal corpo.</div>
-        <div class="details">
-          <dl>
-            <dt>Ruolo</dt><dd>Carta intestata dello Studio</dd>
-            <dt>Provenienza</dt><dd>Template_Vuoto.docx (header) — <strong>non</strong> generato dallo script</dd>
-            <dt>Font</dt><dd>Garamond</dd>
-            <dt>Dimensioni</dt><dd>“BERGAMO LEGAL” 16 pt; sottotitolo/sito/nomi 14 pt</dd>
-            <dt>Allineamento</dt><dd>centrato (come nel template)</dd>
-            <dt>Asset</dt><dd>logo immagine incorporato nel template</dd>
-            <dt>Pagina</dt><dd>A4; margine superiore 5,91 cm per lasciare spazio all’intestazione</dd>
-          </dl>
-          <div class="note">Il corpo della lettera <strong>non duplica</strong> il letterhead.</div>
-          <div class="src">Fonte: Template_Vuoto.docx · regole §2</div>
-        </div>
+        <div class="sum">Ereditato dal template (Garamond). Non generato dal corpo.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Template_Vuoto.docx — <strong>non</strong> generato dallo script</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>14 pt / 16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>A4; margine superiore 5.91 cm</dd></dl><div class="note">Carta intestata (logo + “BERGAMO LEGAL”) ereditata dal template; il corpo non la duplica.</div></div>
       </div>
     </div>
-
     <div class="item c-delivery" data-k="delivery" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Metodo di trasmissione <span class="tag">Generato</span></div>
-        <div class="sum">Es. “A mezzo PEC”. Corsivo, a sinistra.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Allineamento</dt><dd>sinistra (riga autonoma in alto)</dd>
-            <dt>Corsivo</dt><dd>sì (forzato)</dd>
-            <dt>Grassetto</dt><dd>no</dd>
-            <dt>Spaziatura</dt><dd>dopo 8 pt</dd>
-            <dt>Opzionale</dt><dd>reso solo se fornito (mai inventato)</dd>
-          </dl>
-          <div class="note">Variante: può essere la prima riga del blocco destinatario (es. “Via PEC”).</div>
-          <div class="src">Fonte: _emit_delivery · regole-in-lavorazione §4</div>
-        </div>
+        <div class="label">Metodo di trasmissione</div>
+        <div class="sum">sinistra, 12 pt, corsivo.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Reso solo se fornito. Variante: può essere la prima riga del destinatario.</div></div>
       </div>
     </div>
-
     <div class="item c-date" data-k="date" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Data e luogo <span class="tag">Generato</span></div>
-        <div class="sum">A destra, 12 pt.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Allineamento</dt><dd>destra</dd>
-            <dt>Spaziatura</dt><dd>prima 6 pt / dopo 10 pt</dd>
-            <dt>Posizione</dt><dd>sopra il destinatario (default)</dd>
-            <dt>Opzionale</dt><dd>resa solo se fornita; nessun placeholder se manca</dd>
-          </dl>
-          <div class="note">Lo script non completa mai una data assente.</div>
-          <div class="src">Fonte: _emit_date · regole-in-lavorazione §3–4</div>
-        </div>
+        <div class="label">Data e luogo</div>
+        <div class="sum">destra, 12 pt.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 6 pt / dopo 10 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Resa solo se fornita; lo script non inventa una data assente.</div></div>
       </div>
     </div>
-
     <div class="item c-recipient" data-k="recipient" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Destinatario <span class="tag">Generato</span></div>
-        <div class="sum">Rientro 8,5 cm, a sinistra. Mono-linea per l’appellativo.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Allineamento</dt><dd>sinistra</dd>
-            <dt>Rientro sx</dt><dd>8,5 cm</dd>
-            <dt>Spaziatura</dt><dd>2 pt fra le righe; 8 pt dopo l’ultima</dd>
-            <dt>Grassetto</dt><dd>su denominazione / PEC, se fornito così</dd>
-          </dl>
-          <div class="note">Appellativo personale unito al nome sulla stessa riga
-            (es. <em>Egr. Sig. Mario Rossi</em>); “Spett.le” davanti a società resta su riga propria.</div>
-          <div class="src">Fonte: _emit_recipient · _merge_appellatives · feedback 028</div>
-        </div>
+        <div class="label">Destinatario</div>
+        <div class="sum">sinistra, 12 pt, grassetto, rientro 8.5 cm.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Rientro sx</dt><dd>8.5 cm</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Appellativo personale unito al nome sulla stessa riga (es. “Egr. Sig. Mario Rossi”); “Spett.le” davanti a società resta su riga propria.</div></div>
       </div>
     </div>
-
     <div class="item c-ogglabel" data-k="ogglabel" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
         <div class="label">OGGETTO — etichetta <span class="tag">Punto sensibile · Da approvare</span></div>
-        <div class="sum">“OGGETTO:” 16 pt grassetto, centrato.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 16 pt</dd>
-            <dt>Grassetto</dt><dd>sì</dd>
-            <dt>Allineamento</dt><dd>centrato (modalità split, default attuale)</dd>
-            <dt>Spaziatura</dt><dd>prima 10 pt / dopo 4 pt</dd>
-            <dt>Anti-orfano</dt><dd>keep-with-next (resta unito al contenuto)</dd>
-          </dl>
-          <div class="note"><strong>Punto sensibile</strong> (feedback Trustpilot v3 / 027):
-            l’etichetta è un titolo centrato; il testo dell’oggetto va a capo (vedi sotto).
-            L’etichetta è lasciata come scritta (“OGGETTO:”), non forzata in maiuscolo.</div>
-          <div class="src">Fonte: _emit_subject (SPLIT, label centrata) · dubbi D1</div>
-        </div>
+        <div class="sum">centrato, 16 pt, grassetto.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 10 pt / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Punto sensibile (feedback Trustpilot v3 / 027): etichetta come titolo centrato. Lasciata come scritta, non forzata in maiuscolo.</div></div>
       </div>
     </div>
-
     <div class="item c-oggbody" data-k="oggbody" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
         <div class="label">OGGETTO — contenuto <span class="tag">Punto sensibile · Da approvare</span></div>
-        <div class="sum">Testo a capo, 12 pt grassetto, giustificato.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Grassetto</dt><dd>sì</dd>
-            <dt>Allineamento</dt><dd>giustificato (parte da sinistra)</dd>
-            <dt>Posizione</dt><dd>riga propria, sotto l’etichetta</dd>
-            <dt>Spaziatura</dt><dd>dopo 8 pt</dd>
-          </dl>
-          <div class="note">La contestazione su 027 era che il contenuto risultava
-            <em>centrato</em> invece che <em>giustificato</em>: ora è giustificato.</div>
-          <div class="src">Fonte: _emit_subject · feedback 027 · dubbi D1</div>
-        </div>
+        <div class="sum">giustificato, 12 pt, grassetto.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">La contestazione su 027 era il contenuto centrato invece che giustificato: ora è giustificato.</div></div>
       </div>
     </div>
-
     <div class="item c-opening" data-k="opening" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Apertura (saluto) <span class="tag">Generato</span></div>
-        <div class="sum">Formale: grassetto + giustificato. E-mail: tondo + sinistra.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Formale (default)</dt><dd>grassetto, giustificato</dd>
-            <dt>Stile e-mail</dt><dd>tondo, a sinistra (opzione)</dd>
-            <dt>Spaziatura</dt><dd>prima 8 pt / dopo 6 pt</dd>
-            <dt>Opzionale</dt><dd>reso solo se fornito (istanze formali ne sono prive)</dd>
-          </dl>
-          <div class="src">Fonte: _emit_opening · regole §4.5</div>
-        </div>
+        <div class="label">Apertura (saluto)</div>
+        <div class="sum">giustificato, 12 pt, grassetto.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 8 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Formale → grassetto + giustificato; stile e-mail → tondo + sinistra. Reso solo se fornito.</div></div>
       </div>
     </div>
-
     <div class="item c-body" data-k="body" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Paragrafo di corpo <span class="tag">Generato</span></div>
-        <div class="sum">Times New Roman 12 pt, giustificato.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Allineamento</dt><dd>giustificato</dd>
-            <dt>Spaziatura</dt><dd>dopo 6 pt</dd>
-            <dt>Grassetto/corsivo</dt><dd>uso leggero inline ammesso per enfasi</dd>
-          </dl>
-          <div class="note">Normalizzazione: trattini “–/—” → “-”; divisori “***” rimossi.</div>
-          <div class="src">Fonte: _emit_body (paragraph) · normalize_text</div>
-        </div>
+        <div class="label">Paragrafo di corpo</div>
+        <div class="sum">giustificato, 12 pt.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Normalizzazione: trattini “–/—” → “-”; divisori “***” rimossi. Grassetto/corsivo leggero inline ammesso.</div></div>
       </div>
     </div>
-
     <div class="item c-subhead" data-k="subhead" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Titoletto a sinistra <span class="tag">Generato</span></div>
-        <div class="sum">14 pt grassetto, a sinistra, contenuto a capo.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 14 pt</dd>
-            <dt>Grassetto</dt><dd>sì</dd>
-            <dt>Allineamento</dt><dd>sinistra</dd>
-            <dt>Spaziatura</dt><dd>prima 12 pt / dopo 6 pt</dd>
-            <dt>Anti-orfano</dt><dd>keep-with-next</dd>
-          </dl>
-          <div class="note">Es. “Fatto”, “Diritto”, “MOTIVA …”, titoli numerati di argomento.
-            I verbi dispositivi con testo a seguire (es. “CHIEDE ALTRESÌ”) usano questo titoletto
-            + il contenuto a capo, non il grassetto inline.</div>
-          <div class="src">Fonte: _emit_body (heading_left) · disposition()</div>
-        </div>
+        <div class="label">Titoletto a sinistra</div>
+        <div class="sum">sinistra, 14 pt, grassetto.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>14 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 12 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “Fatto”, “Diritto”, “MOTIVA …”. I verbi dispositivi (“CHIEDE ALTRESÌ”) usano questo titoletto + contenuto a capo.</div></div>
       </div>
     </div>
-
     <div class="item c-ritual" data-k="ritual" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Titolo rituale centrato <span class="tag">Generato</span></div>
-        <div class="sum">16 pt grassetto, centrato.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 16 pt</dd>
-            <dt>Grassetto</dt><dd>sì</dd>
-            <dt>Allineamento</dt><dd>centrato</dd>
-            <dt>Spaziatura</dt><dd>prima 14 pt / dopo 8 pt</dd>
-            <dt>Anti-orfano</dt><dd>keep-with-next</dd>
-          </dl>
-          <div class="note">Es. “IN FATTO”, “IN DIRITTO”, “DICHIARA”, “DIFFIDA”, “PREMESSO CHE”, “INVITA”.</div>
-          <div class="src">Fonte: _emit_body (heading_center)</div>
-        </div>
+        <div class="label">Titolo rituale centrato</div>
+        <div class="sum">centrato, 16 pt, grassetto.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>16 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 14 pt / dopo 8 pt</dd><dt>Anti-orfano</dt><dd>keep-with-next</dd></dl><div class="note">Es. “IN FATTO”, “DICHIARA”, “DIFFIDA”, “PREMESSO CHE”, “INVITA”.</div></div>
       </div>
     </div>
-
     <div class="item c-list" data-k="list" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Voce di elenco <span class="tag">Generato</span></div>
-        <div class="sum">Rientro 0,5 cm, giustificato. Marcatore nel testo.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Allineamento</dt><dd>giustificato</dd>
-            <dt>Rientro sx</dt><dd>0,5 cm (default; 0,5–1,0 cm)</dd>
-            <dt>Spaziatura</dt><dd>dopo 4 pt</dd>
-            <dt>Marcatore</dt><dd>(i)/(ii), i)/ii), (a)/(b), (α)/(β), • — fa parte del testo</dd>
-          </dl>
-          <div class="src">Fonte: _emit_body (list_item)</div>
-        </div>
+        <div class="label">Voce di elenco</div>
+        <div class="sum">giustificato, 12 pt, rientro 0.5 cm.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>giustificato</dd><dt>Rientro sx</dt><dd>0.5 cm</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 0 pt / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Marcatore ((i)/(a)/•) incluso nel testo.</div></div>
       </div>
     </div>
-
     <div class="item c-closing" data-k="closing" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Congedo <span class="tag">Generato</span></div>
-        <div class="sum">A destra, staccato dal corpo.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Allineamento</dt><dd>destra (stesso lato della firma)</dd>
-            <dt>Spaziatura</dt><dd>prima 16 pt / dopo 6 pt</dd>
-          </dl>
-          <div class="note">Es. “Distinti saluti.”, “Con osservanza,”, “In fede,”.</div>
-          <div class="src">Fonte: _emit_closing</div>
-        </div>
+        <div class="label">Congedo</div>
+        <div class="sum">destra, 12 pt.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 pt / dopo 6 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Stesso lato della firma (destra).</div></div>
       </div>
     </div>
-
     <div class="item c-signature" data-k="signature" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
         <div class="label">Blocco firma <span class="tag">Da approvare</span></div>
-        <div class="sum">A destra; nomi in grassetto; spaziatura ariosa.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 12 pt</dd>
-            <dt>Allineamento</dt><dd>destra</dd>
-            <dt>Grassetto</dt><dd>nomi firmatari sì; riga firma e “(Firma digitale)” no</dd>
-            <dt>Corsivo</dt><dd>“(Firma digitale)” in corsivo</dd>
-            <dt>Spaziatura</dt><dd>prima riga 18 pt; riga “____” prima 2/dopo 8; nuovo firmatario 12; righe ruolo 2</dd>
-          </dl>
-          <div class="note">Spaziatura pensata per dare respiro e separare più firmatari — <strong>da approvare</strong>.</div>
-          <div class="src">Fonte: _emit_signature (D3)</div>
-        </div>
+        <div class="sum">destra, 12 pt.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 18 pt / dopo 2 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Nomi firmatari in grassetto; “(Firma digitale)” in corsivo; spaziatura ariosa — da approvare.</div></div>
       </div>
     </div>
-
     <div class="item c-attach" data-k="attach" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Allegati <span class="tag">Generato</span></div>
-        <div class="sum">“Allegati:” grassetto; voci rientrate.</div>
-        <div class="details">
-          <dl>
-            <dt>Etichetta</dt><dd>“Allegati:” Times New Roman 12 pt grassetto, a sinistra</dd>
-            <dt>Spaziatura etichetta</dt><dd>prima 16 pt / dopo 4 pt</dd>
-            <dt>Voci</dt><dd>12 pt, a sinistra, rientro 0,5 cm, dopo 3 pt</dd>
-            <dt>Opzionale</dt><dd>reso solo se presente</dd>
-          </dl>
-          <div class="src">Fonte: _emit_attachments</div>
-        </div>
+        <div class="label">Allegati</div>
+        <div class="sum">sinistra, 12 pt, grassetto.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>12 pt</dd><dt>Allineamento</dt><dd>sinistra</dd><dt>Grassetto</dt><dd>sì</dd><dt>Corsivo</dt><dd>no</dd><dt>Spaziatura</dt><dd>prima 16 pt / dopo 4 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">“Allegati:” in grassetto; voci rientrate. Reso solo se presente.</div></div>
       </div>
     </div>
-
     <div class="item c-post" data-k="post" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
-        <div class="label">Postilla / disclaimer <span class="tag">Generato</span></div>
-        <div class="sum">Piccola, in corsivo, a destra.</div>
-        <div class="details">
-          <dl>
-            <dt>Font</dt><dd>Times New Roman 10 pt</dd>
-            <dt>Corsivo</dt><dd>sì (forzato)</dd>
-            <dt>Allineamento</dt><dd>destra</dd>
-            <dt>Spaziatura</dt><dd>prima 4 pt</dd>
-            <dt>Opzionale</dt><dd>resa solo se presente</dd>
-          </dl>
-          <div class="src">Fonte: _emit_postscript</div>
-        </div>
+        <div class="label">Postilla / disclaimer</div>
+        <div class="sum">destra, 10 pt, corsivo.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Generato dallo script</dd><dt>Font</dt><dd>Times New Roman</dd><dt>Dimensione</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>destra</dd><dt>Grassetto</dt><dd>no</dd><dt>Corsivo</dt><dd>sì</dd><dt>Spaziatura</dt><dd>prima 4 pt / dopo 0 pt</dd><dt>Anti-orfano</dt><dd>no</dd></dl><div class="note">Piccola, in corsivo. Resa solo se presente.</div></div>
       </div>
     </div>
-
     <div class="item c-footer" data-k="footer" tabindex="0">
       <span class="swatch" aria-hidden="true"></span>
       <div class="meta">
         <div class="label">Piè di pagina <span class="tag">Ereditato dal template</span></div>
-        <div class="sum">Dati di registrazione Studio, Garamond. Non generato.</div>
-        <div class="details">
-          <dl>
-            <dt>Ruolo</dt><dd>Footer con dati Studio (R.E.A., capitale, C.F./P.IVA, recapiti, sedi)</dd>
-            <dt>Provenienza</dt><dd>Template_Vuoto.docx (footer) — <strong>non</strong> generato dallo script</dd>
-            <dt>Font</dt><dd>Garamond 10 pt</dd>
-            <dt>Pagina</dt><dd>margine inferiore 4,54 cm</dd>
-          </dl>
-          <div class="src">Fonte: Template_Vuoto.docx · regole §2</div>
-        </div>
+        <div class="sum">Ereditato dal template (Garamond). Non generato dal corpo.</div>
+        <div class="details"><dl><dt>Provenienza</dt><dd>Template_Vuoto.docx — <strong>non</strong> generato dallo script</dd><dt>Font</dt><dd>Garamond</dd><dt>Dimensioni</dt><dd>10 pt</dd><dt>Allineamento</dt><dd>centrato</dd><dt>Pagina</dt><dd>margine inferiore 4.54 cm</dd></dl><div class="note">Dati di registrazione dello Studio, ereditati dal template (non generati).</div></div>
       </div>
     </div>
-
   </aside>
-
-  <!-- =================== PAPER PREVIEW =================== -->
   <main class="paper-wrap">
-    <div class="paper" aria-label="Anteprima lettera fittizia">
-
-      <!-- inherited header -->
+    <div class="paper" aria-label="Anteprima lettera fittizia generata dallo script">
       <div class="seg c-header" data-k="header" tabindex="0">
-        <div class="tpl-header">
-          <div class="tpl-tag">Ereditato dal template</div>
-          <div class="logo">▢ logo</div>
-          <div class="firm">BERGAMO LEGAL</div>
-          <div class="sub">Società tra Avvocati s.r.l.</div>
-          <div class="web">www.bergamo.legal</div>
-          <div class="lawyers">Avv. … &nbsp;·&nbsp; Avv. …</div>
-        </div>
+        <div class="tpl-header"><div class="tpl-tag">Ereditato dal template</div>
+          <div class="firm">BERGAMO LEGAL<br>Società tra Avvocati s.r.l.<br>www.bergamo.legal<br>Avv. Matteo Bertocchi<br>Avv. Daiana Chiappa </div></div>
       </div>
-
       <div class="letter">
-        <div class="seg c-delivery J i" data-k="delivery" tabindex="0">A mezzo PEC, anticipata a mezzo posta elettronica</div>
-
-        <div class="seg c-date R mt-s" data-k="date" tabindex="0">Bergamo, 24 giugno 2026</div>
-
-        <div class="seg c-recipient L recip mt-s" data-k="recipient" tabindex="0">
-          <div>Egr. Sig. Mario Rossi</div>
-          <div>Via dei Tigli, n. 14</div>
-          <div>24121 Bergamo (BG)</div>
-          <div class="b">PEC: mario.rossi@esempio-pec.it</div>
-        </div>
-
-        <div class="seg c-ogglabel C b sz16 mt-m" data-k="ogglabel" tabindex="0">OGGETTO:</div>
-        <div class="seg c-oggbody J b sz12" data-k="oggbody" tabindex="0">Diffida ad adempiere - contratto di fornitura del 10 gennaio 2026</div>
-
-        <div class="seg c-opening J b mt-m" data-k="opening" tabindex="0">Egregio Signore,</div>
-
-        <div class="seg c-body J mt-s" data-k="body" tabindex="0">lo Studio scrivente agisce in nome e per conto di Aurora Servizi S.r.l., con sede in Bergamo, in forza di incarico ricevuto, in relazione al rapporto di fornitura di seguito descritto.</div>
-
-        <div class="seg c-subhead L b sz14 mt-m" data-k="subhead" tabindex="0">Fatto</div>
-        <div class="seg c-body J mt-s" data-k="body" tabindex="0">1. In data 10 gennaio 2026 le parti sottoscrivevano un contratto di fornitura di materiale per ufficio, con pagamento a 30 giorni dalla consegna.</div>
-        <div class="seg c-body J mt-s" data-k="body" tabindex="0">2. La fornitura veniva regolarmente eseguita e fatturata (fattura n. 42), ma il relativo corrispettivo è rimasto integralmente impagato alla scadenza convenuta.</div>
-
-        <div class="seg c-ritual C b sz16 mt-m" data-k="ritual" tabindex="0">DIFFIDA</div>
-        <div class="seg c-body J mt-s" data-k="body" tabindex="0">la S.V., come sopra individuata, a voler:</div>
-        <div class="seg c-list J indent mt-s" data-k="list" tabindex="0">(i) provvedere al pagamento della somma di euro 3.500,00 entro e non oltre 15 giorni dalla ricezione della presente;</div>
-        <div class="seg c-list J indent" data-k="list" tabindex="0">(ii) trasmettere allo Studio scrivente la contabile dell’avvenuto pagamento.</div>
-        <div class="seg c-body J mt-s" data-k="body" tabindex="0">In difetto di adempimento nel termine indicato, si procederà nelle competenti sedi giudiziarie per il recupero del credito, oltre interessi e spese.</div>
-
-        <div class="seg c-closing R mt-m" data-k="closing" tabindex="0">In attesa di un cortese e sollecito riscontro, si porgono distinti saluti.</div>
-
-        <div class="seg c-signature R mt-s" data-k="signature" tabindex="0">
-          <div>Bergamo Legal Società tra Avvocati S.r.l.</div>
-          <div class="b mt-s">Avv. Giulia Conti</div>
-          <div>_______________________________</div>
-        </div>
-
-        <div class="seg c-attach L mt-m" data-k="attach" tabindex="0">
-          <div class="b">Allegati:</div>
-          <div class="indent">All. 1 - copia del contratto di fornitura del 10 gennaio 2026;</div>
-          <div class="indent">All. 2 - copia della fattura n. 42.</div>
-        </div>
-
-        <div class="seg c-post R i sz10 mt-m" data-k="post" tabindex="0">(documento fittizio, predisposto a solo scopo di revisione formale)</div>
+        <div class="seg c-delivery" data-k="delivery" tabindex="0" style="text-align:left;font-size:14.4px;font-style:italic;margin-top:0.0px;margin-bottom:9.6px">A mezzo PEC, anticipata a mezzo posta elettronica</div>
+        <div class="seg c-date" data-k="date" tabindex="0" style="text-align:right;font-size:14.4px;margin-top:7.2px;margin-bottom:12.0px">Bergamo, 24 giugno 2026</div>
+        <div class="seg c-recipient" data-k="recipient" tabindex="0"><div style="text-align:left;font-size:14.4px;margin-left:289.0px;margin-top:0.0px;margin-bottom:2.4px">Egr. Sig. Mario Rossi</div><div style="text-align:left;font-size:14.4px;margin-left:289.0px;margin-top:0.0px;margin-bottom:2.4px">Via dei Tigli, n. 14</div><div style="text-align:left;font-size:14.4px;margin-left:289.0px;margin-top:0.0px;margin-bottom:2.4px">24121 Bergamo (BG)</div><div style="text-align:left;font-size:14.4px;font-weight:bold;margin-left:289.0px;margin-top:0.0px;margin-bottom:9.6px">PEC: mario.rossi@esempio-pec.it</div></div>
+        <div class="seg c-ogglabel" data-k="ogglabel" tabindex="0" style="text-align:center;font-size:19.2px;font-weight:bold;margin-top:12.0px;margin-bottom:4.8px">OGGETTO:</div>
+        <div class="seg c-oggbody" data-k="oggbody" tabindex="0" style="text-align:justify;font-size:14.4px;font-weight:bold;margin-top:0.0px;margin-bottom:9.6px">Diffida ad adempiere - contratto di fornitura del 10 gennaio 2026</div>
+        <div class="seg c-opening" data-k="opening" tabindex="0" style="text-align:justify;font-size:14.4px;font-weight:bold;margin-top:9.6px;margin-bottom:7.2px">Egregio Signore,</div>
+        <div class="seg c-body" data-k="body" tabindex="0" style="text-align:justify;font-size:14.4px;margin-top:0.0px;margin-bottom:7.2px">lo Studio scrivente agisce in nome e per conto di Aurora Servizi S.r.l., con sede in Bergamo, in forza di incarico ricevuto, in relazione al rapporto di fornitura di seguito descritto.</div>
+        <div class="seg c-subhead" data-k="subhead" tabindex="0" style="text-align:left;font-size:16.8px;font-weight:bold;margin-top:14.4px;margin-bottom:7.2px">Fatto</div>
+        <div class="seg c-body" data-k="body" tabindex="0" style="text-align:justify;font-size:14.4px;margin-top:0.0px;margin-bottom:7.2px">1. In data 10 gennaio 2026 le parti sottoscrivevano un contratto di fornitura di materiale per ufficio, con pagamento a 30 giorni dalla consegna.</div>
+        <div class="seg c-body" data-k="body" tabindex="0" style="text-align:justify;font-size:14.4px;margin-top:0.0px;margin-bottom:7.2px">2. La fornitura veniva regolarmente eseguita e fatturata (fattura n. 42), ma il relativo corrispettivo è rimasto integralmente impagato alla scadenza convenuta.</div>
+        <div class="seg c-ritual" data-k="ritual" tabindex="0" style="text-align:center;font-size:19.2px;font-weight:bold;margin-top:16.8px;margin-bottom:9.6px">DIFFIDA</div>
+        <div class="seg c-body" data-k="body" tabindex="0" style="text-align:justify;font-size:14.4px;margin-top:0.0px;margin-bottom:7.2px">la S.V., come sopra individuata, a voler:</div>
+        <div class="seg c-list" data-k="list" tabindex="0" style="text-align:justify;font-size:14.4px;margin-left:17.0px;margin-top:0.0px;margin-bottom:4.8px">(i) provvedere al pagamento della somma di euro 3.500,00 entro e non oltre 15 giorni dalla ricezione della presente;</div>
+        <div class="seg c-list" data-k="list" tabindex="0" style="text-align:justify;font-size:14.4px;margin-left:17.0px;margin-top:0.0px;margin-bottom:4.8px">(ii) trasmettere allo Studio scrivente la contabile dell&#x27;avvenuto pagamento.</div>
+        <div class="seg c-body" data-k="body" tabindex="0" style="text-align:justify;font-size:14.4px;margin-top:0.0px;margin-bottom:7.2px">In difetto di adempimento nel termine indicato, si procederà nelle competenti sedi giudiziarie per il recupero del credito, oltre interessi e spese.</div>
+        <div class="seg c-closing" data-k="closing" tabindex="0" style="text-align:right;font-size:14.4px;margin-top:19.2px;margin-bottom:7.2px">In attesa di un cortese e sollecito riscontro, si porgono distinti saluti.</div>
+        <div class="seg c-signature" data-k="signature" tabindex="0"><div style="text-align:right;font-size:14.4px;margin-top:21.6px;margin-bottom:2.4px">Bergamo Legal Società tra Avvocati S.r.l.</div><div style="text-align:right;font-size:14.4px;font-weight:bold;margin-top:2.4px;margin-bottom:2.4px">Avv. Giulia Conti</div><div style="text-align:right;font-size:14.4px;margin-top:2.4px;margin-bottom:9.6px">_______________________________</div></div>
+        <div class="seg c-attach" data-k="attach" tabindex="0"><div style="text-align:left;font-size:14.4px;font-weight:bold;margin-top:19.2px;margin-bottom:4.8px">Allegati:</div><div style="text-align:left;font-size:14.4px;margin-left:17.0px;margin-top:0.0px;margin-bottom:3.6px">All. 1 - copia del contratto di fornitura del 10 gennaio 2026;</div><div style="text-align:left;font-size:14.4px;margin-left:17.0px;margin-top:0.0px;margin-bottom:3.6px">All. 2 - copia della fattura n. 42.</div></div>
+        <div class="seg c-post" data-k="post" tabindex="0" style="text-align:right;font-size:12.0px;font-style:italic;margin-top:4.8px;margin-bottom:0.0px">(documento fittizio, predisposto a solo scopo di revisione formale)</div>
       </div>
-
-      <!-- inherited footer -->
       <div class="seg c-footer" data-k="footer" tabindex="0">
-        <div class="tpl-footer">
-          <div class="tpl-tag">Ereditato dal template</div>
-          R.E.A. … · Capitale Sociale … · C.F. e P.IVA …<br>
-          Iscritta all’Ordine degli Avvocati di Bergamo<br>
-          Via Fratelli Calvi 10E — Bergamo &nbsp;·&nbsp; Via Montenapoleone 8 — Milano
-        </div>
+        <div class="tpl-footer"><div class="tpl-tag">Ereditato dal template</div>R.E.A. BG 472665 - Capitale Sociale € 100.000 (versato € 75.000) - C.F. e P.IVA 04565220169<br>Iscritta all’Ordine degli Avvocati di Bergamo con il n. 14<br>+39 351 83 13 103		info@bergamo.legal<br>+39 035 29 03 53		bergamo.legal@ultracert.it<br>+39 035 21 76 14	Via Fratelli Calvi 10E - BERGAMO (24122 BG) - IT<br>	Via Montenapoleone 8 - MILANO (20121 MI) - IT</div>
       </div>
-
     </div>
   </main>
 </div>
-
 <script>
   (function(){
-    function all(sel){return Array.prototype.slice.call(document.querySelectorAll(sel));}
-    function setActive(k, on){
+    function all(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
+    function setActive(k,on){
       all('.item[data-k="'+k+'"]').forEach(function(e){e.classList.toggle('active',on);});
       all('.seg[data-k="'+k+'"]').forEach(function(e){e.classList.toggle('hl',on);});
     }
-    function wire(el){
-      var k = el.getAttribute('data-k');
-      el.addEventListener('mouseenter', function(){setActive(k,true);});
-      el.addEventListener('mouseleave', function(){setActive(k,false);});
-      el.addEventListener('focus', function(){setActive(k,true);});
-      el.addEventListener('blur', function(){setActive(k,false);});
+    function wire(el){var k=el.getAttribute('data-k');
+      ['mouseenter','focus'].forEach(function(ev){el.addEventListener(ev,function(){setActive(k,true);});});
+      ['mouseleave','blur'].forEach(function(ev){el.addEventListener(ev,function(){setActive(k,false);});});
     }
-    all('.item').forEach(wire);
-    all('.seg').forEach(wire);
+    all('.item').forEach(wire); all('.seg').forEach(wire);
   })();
 </script>
 </body>

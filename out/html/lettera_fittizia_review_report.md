@@ -12,13 +12,28 @@ focus da tastiera**, tutti i dettagli di formattazione: font, dimensione,
 allineamento, spaziatura, rientro, grassetto/corsivo, keep-with-next ed eredità
 dal template. La pagina si apre direttamente come file statico (nessun build).
 
+## Come è stata prodotta (importante)
+
+La lettera fittizia **non è HTML disegnato a mano**: è **generata dal formatter**.
+Il flusso è:
+
+1. si inventa il contenuto fittizio e si costruisce un `LetterDocument`;
+2. lo si passa a `render_letter` → `out/html/lettera_fittizia.docx` (DOCX reale,
+   formattato dallo script, eredita header/footer/margini dal template);
+3. si **rilegge** il `.docx` e si emette l'HTML usando le proprietà **effettive**
+   di ogni paragrafo (allineamento, dimensione, grassetto/corsivo, rientro,
+   spaziatura, keep-with-next).
+
+Quindi l'anteprima e i dettagli della legenda riflettono ciò che lo script
+produce davvero, non un'approssimazione. Lo script di generazione è
+`tool/scripts/build_review_html.py` (rilancia per rigenerare).
+
 ## File prodotti
 
-- `out/html/lettera_fittizia_review.html` — l'artefatto.
+- `out/html/lettera_fittizia.docx` — la lettera fittizia **formattata dal tool**.
+- `out/html/lettera_fittizia_review.html` — l'artefatto di review (generato dal `.docx`).
 - `out/html/lettera_fittizia_review_report.md` — questo report.
-
-Nessuno script di generazione era necessario: la pagina è autonoma e contiene
-solo contenuto **fittizio**.
+- `tool/scripts/build_review_html.py` — generatore (render + estrazione + HTML).
 
 ## Contenuto fittizio (nessun dato reale)
 
@@ -101,7 +116,8 @@ approvare”, “Punto sensibile”, “Ereditato dal template”, “Generato d
 ## Esito checklist di accettazione
 
 - ✔ ogni voce di legenda ha una sezione evidenziata corrispondente (16/16);
-- ✔ ogni sezione evidenziata ha una voce di legenda (21 segmenti → 16 chiavi);
+- ✔ ogni sezione evidenziata ha una voce di legenda (16 chiavi, corrispondenza piena);
+- ✔ la lettera è prodotta da `render_letter` (DOCX reale) e l'HTML ne legge i valori;
 - ✔ ogni voce espone i dettagli completi su hover e focus;
 - ✔ la lettera fittizia include tutti i tipi di sezione richiesti;
 - ✔ la pagina si apre come file HTML statico, senza build;
