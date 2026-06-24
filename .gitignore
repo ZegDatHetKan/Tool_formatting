@@ -3,8 +3,9 @@
 /feedback.md
 /documenti_generati/storiche/
 
-# Generated letter outputs
-/out/
+# Generated letter outputs (keep only the fictional client-review artifact)
+/out/*
+!/out/html/
 
 # Local virtualenv
 /.venv/
