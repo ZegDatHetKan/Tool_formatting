@@ -22,19 +22,19 @@ CSS**: l'anteprima è il **render reale del DOCX** prodotto dal formatter. Il fl
 2. `render_letter` → `out/lettera_fittizia.docx` (DOCX reale, eredita
    header/footer/margini dal template);
 3. **LibreOffice headless** converte il DOCX in PDF → `out/lettera_fittizia.pdf`
-   (impaginazione, font, intestazione e piè di pagina effettivi);
-4. il PDF pulito è reso in **immagine** (`pdftoppm`, 150 dpi) →
-   `lettera_fittizia_review-N.png`, embeddata nell'HTML;
+   (impaginazione, font, intestazione e piè di pagina effettivi: è il deliverable);
+4. **solo per l'anteprima web** si crea una copia a **pagina unica** (altezza
+   pagina calcolata per contenere tutto senza interruzioni), resa in **immagine**
+   (`pdftoppm`, 150 dpi) → `lettera_fittizia_review.png`;
 5. con `pdftotext -bbox` si estraggono le **coordinate** di ogni parola; le
    parole sono raggruppate in righe e classificate per sezione, ottenendo i
-   **riquadri interattivi** (in % della pagina) sovrapposti all'immagine;
-6. la legenda mostra i dettagli **letti dal DOCX reale** (allineamento,
+   **riquadri** (in % della pagina) sovrapposti all'immagine;
+6. le schede-sezione mostrano i dettagli **letti dal DOCX reale** (allineamento,
    dimensione, grassetto/corsivo, rientro, spaziatura, keep-with-next).
 
-Quindi font, impaginazione e paginazione sono quelli effettivi dello script (la
-lettera occupa 2 pagine per i margini ampi del template). L'immagine è **pulita**
-(senza colori); le evidenziazioni sono **interattive**, disegnate sopra
-l'immagine solo al passaggio del mouse/focus.
+Quindi font e impaginazione sono quelli effettivi dello script; l'anteprima è
+un'unica pagina continua. L'immagine è **pulita** (senza colori); tinte e linee
+sono **interattive**, disegnate nell'HTML sopra l'immagine.
 
 ### Nota sui font del rendering
 
@@ -52,17 +52,18 @@ nominale. La sostituzione riguarda solo l'immagine di anteprima, non il `.docx`.
 
 - `out/lettera_fittizia.docx` — lettera fittizia **formattata dal tool** (pulita).
 - `out/lettera_fittizia.pdf` — stessa lettera in PDF (render LibreOffice, pulita).
-- `out/html/lettera_fittizia_review-1.png`, `-2.png` — render reale con sezioni evidenziate.
-- `out/html/lettera_fittizia_review.html` — artefatto di review (embedda le immagini + legenda).
+- `out/html/lettera_fittizia_review.png` — render reale a pagina unica (anteprima).
+- `out/html/lettera_fittizia_review.html` — artefatto di review (cartellone interattivo).
 - `out/html/lettera_fittizia_review_report.md` — questo report.
 - `tool/scripts/build_review_html.py` — generatore (render → PDF → immagine → HTML).
 
 ## Contenuto fittizio (nessun dato reale)
 
 Lettera inventata: diffida ad adempiere di *Aurora Servizi S.r.l.* verso *Sig.
-Mario Rossi* (nomi, indirizzi, importi, numeri di fattura e l'avvocato firmatario
-*Avv. Giulia Conti* sono tutti **inventati**). Nessun cliente reale, nessuna
-controversia reale, nessun dato preso da `previous_works/`.
+Mario Rossi* (nomi delle parti, indirizzi, importi e numeri di fattura sono
+**inventati**). Il firmatario è *Avv. Matteo Bertocchi* (socio dello Studio, già
+presente nel letterhead del template). Nessun cliente reale, nessuna controversia
+reale, nessun dato preso da `previous_works/`.
 
 La lettera esercita tutte le sezioni richieste: metodo di trasmissione, data/
 luogo, destinatario, OGGETTO (etichetta + contenuto), apertura, paragrafo di
@@ -125,17 +126,19 @@ approvare”, “Punto sensibile”, “Ereditato dal template”, “Generato d
 
 ## Interazione e accessibilità
 
-- **Riquadri interattivi precisi** sovrapposti all'immagine: ricavati dalle
-  coordinate reali del PDF (`pdftotext -bbox`), coprono esattamente ogni sezione.
-- **Evidenziazione reciproca**: passando mouse/focus su una voce di legenda si
-  evidenzia la zona corrispondente nella lettera, e viceversa.
-- **Linea di collegamento**: una linea tratteggiata (nel colore della sezione)
-  unisce la voce di legenda alla zona della lettera; si **ridisegna allo scroll**
-  e punta sempre alla zona più vicina nel viewport.
-- Dettagli completi su **hover** e su **focus** da tastiera (tutto focusabile con `Tab`).
-- In **stampa/PDF** i dettagli sono espansi e le linee nascoste (media query).
-- Layout responsive: legenda a sinistra su desktop (sticky), sopra la lettera su
-  mobile (linee disattivate su schermi piccoli).
+- **Cartellone unico**: la lettera (a sinistra) e le schede-sezione (a destra)
+  stanno su un'unica tela, non in due colonne indipendenti. La lettera è una
+  **pagina unica continua** (niente taglio fra pagine).
+- **Tinte permanenti leggere** su ogni sezione della lettera, che si
+  **intensificano** al passaggio del mouse/focus (sulla sezione o sulla scheda).
+- **Schede a fianco** allineate verticalmente alla sezione corrispondente;
+  riepilogo sempre visibile, dettagli completi che si espandono su hover/focus.
+- **Linee di collegamento permanenti e leggere** (nel colore della sezione) fra
+  ogni sezione e la sua scheda; si rinforzano sull'elemento attivo.
+- Riquadri ricavati dalle **coordinate reali del PDF** (`pdftotext -bbox`).
+- Navigabile da **tastiera** (`Tab`); in **stampa/PDF** dettagli espansi.
+- Responsive: su schermi stretti le schede vanno sotto la lettera (linee disattivate).
+- Niente “hero”: solo una sottile riga informativa in testa.
 
 ## Esito checklist di accettazione
 
