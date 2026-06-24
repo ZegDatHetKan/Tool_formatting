@@ -86,10 +86,11 @@ def example_diffida() -> LetterDocument:
 
 
 def example_email_comunicazione() -> LetterDocument:
-    """E-mail-style communication: plain (non-formal) opening, inline subject,
-    bullet list, single signer (inspired by corpus 005/032)."""
+    """E-mail/PEC-style communication (corpus 005/011/032): NO postal recipient
+    block and NO date — only what the author sent is rendered (D2). Plain
+    opening, inline subject, list, single signer."""
     return LetterDocument(
-        recipient_block=["Spett.le Apple Distribution International"],
+        # no recipient_block, no date_place: nothing is invented/completed
         subject="Oggetto: Re: Aggiornamento numeri D-U-N-S",
         opening="Gentile Stefania,",
         body_blocks=[

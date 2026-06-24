@@ -28,7 +28,6 @@ rientri, spaziature, condizioni) corrisponde **1:1** a una riga di codice.
 | `RECIPIENT_INDENT_CM` | `8.5` cm | rientro sinistro blocco destinatario |
 | `LIST_INDENT_CM` | `0.5` cm | rientro sinistro voci di elenco e allegati |
 | `DEFAULT_TEMPLATE` | `assets/Template_Vuoto.docx` | template di base |
-| `DATE_PLACEHOLDER` | `[INSERISCI QUI LA DATA]` | scritto al posto della data quando manca |
 
 ## 2. Eredità dal template (`render_letter` → `_clear_body`)
 
@@ -39,17 +38,21 @@ e si ricompone. Restano intatti: `sectPr` (formato pagina A4, margini — superi
 
 ## 3. Ordine di emissione (`render_letter`)
 
+**Principio (regola cliente): si formatta SOLO ciò che viene fornito, MAI si
+inventa o completa.** Ogni blocco è opzionale e viene reso solo se valorizzato;
+nessun placeholder/destinatario/saluto/data viene aggiunto dal formatter.
+
 1. `delivery_method` — solo se valorizzato **e** `delivery_inline_with_recipient == False`;
-2. `date_place` — **sempre emessa**; se assente/vuota viene scritto `DATE_PLACEHOLDER`. Posizione: sopra il destinatario se `date_above_recipient == True`;
-3. `recipient_block`;
-4. `date_place` — se `date_above_recipient == False`, la data (o il placeholder) va qui invece che al punto 2;
-5. `subject` (OGGETTO);
-6. `opening` — solo se il testo, una volta appiattito, **non è vuoto** (le istanze formali ne sono prive);
+2. `date_place` — **solo se fornita** (nessun placeholder se manca); sopra il destinatario se `date_above_recipient == True`;
+3. `recipient_block` — solo se non vuoto;
+4. `date_place` — se `date_above_recipient == False`, la data va qui invece che al punto 2;
+5. `subject` — solo se non vuoto;
+6. `opening` — solo se non vuoto;
 7. `body_blocks`;
-8. `closing` — solo se valorizzato;
-9. `signature_block`;
+8. `closing` — solo se non vuoto;
+9. `signature_block` — solo se non vuoto;
 10. `attachments` — solo se non vuoto;
-11. `postscript` — solo se valorizzato.
+11. `postscript` — solo se non vuoto.
 
 La cartella di output viene creata se non esiste; il file non finisce mai in
 `previous_works/`.
@@ -59,9 +62,9 @@ La cartella di output viene creata se non esiste; il file non finisce mai in
 | Blocco / funzione | Allin. | Size | Grassetto | Corsivo | Rientro sx | Sp. prima | Sp. dopo | keep_with_next |
 |-------------------|--------|------|-----------|---------|------------|-----------|----------|----------------|
 | `delivery_method` (autonomo) — `_emit_delivery` | LEFT | 12 | honor span | **sì (forzato)** | — | — | 8 | no |
-| `date_place` — `_emit_date` (sempre; placeholder se mancante) | RIGHT | 12 | honor span | honor span | — | 6 | 10 | no |
+| `date_place` — `_emit_date` (solo se fornita) | RIGHT | 12 | honor span | honor span | — | 6 | 10 | no |
 | `recipient_block` riga — `_emit_recipient` | LEFT | 12 | honor span | honor span | **8.5** | — | 2 (8 sull'ultima riga) | no |
-| OGGETTO **inline** (default) — `_emit_subject` | JUSTIFY¹ | label 16 / testo 12 | **sì** | honor span sul testo² | — | 8 | 8 | no |
+| OGGETTO **inline** (default) — `_emit_subject` | JUSTIFY¹ | label 16 / testo 12 | **sì** | no² | — | 8 | 8 | no |
 | OGGETTO **split** label — `_emit_subject` | CENTER³ | 16 | **sì** | no | — | 10 | 4 | **sì** |
 | OGGETTO **split** contenuto — `_emit_subject` | CENTER³ | 12 | **sì** | no | — | — | 8 | no |
 | `opening` — `_emit_opening` | JUSTIFY⁴ | 12 | sì se formale, altrim. honor⁴ | honor span | — | 8 | 6 | no |
@@ -70,24 +73,26 @@ La cartella di output viene creata se non esiste; il file non finisce mai in
 | corpo: **heading_left** (titoletto) — `_emit_body` | LEFT | 14 | **sì** | no | — | 12 | 6 | **sì** |
 | corpo: **list_item** — `_emit_body` | JUSTIFY | 12 | honor block | honor block | block o 0.5⁵ | — | 4 | no |
 | `closing` — `_emit_closing` | RIGHT | 12 | honor span | honor span | — | 16 | 6 | no |
-| firma: riga — `_emit_signature` | RIGHT | 12 | vedi §5.3 | vedi §5.3 | — | 8 prima riga / 4 nomi / — riga firma⁶ | 2 | no |
+| firma: riga — `_emit_signature` | RIGHT | 12 | vedi §5.3 | vedi §5.3 | — | vedi §5.3⁶ | 2 (8 dopo riga firma) | no |
 | `attachments` "Allegati:" — `_emit_attachments` | LEFT | 12 | **sì** | no | — | 16 | 4 | no |
 | `attachments` voce — `_emit_attachments` | LEFT | 12 | honor span | honor span | **0.5** | — | 3 | no |
 | `postscript` — `_emit_postscript` | RIGHT | 10 | honor span | **sì (forzato)** | — | 4 | — | no |
 
 Note:
 1. CENTER se `subject_content_center == True`.
-2. Percorso senza label: il prefisso `OGGETTO: ` (16 pt) viene anteposto e il
-   testo (12 pt) ne eredita il corsivo per-span. Percorso con label: la stringa
-   è divisa sul primo `:` → `OGGETTO:` a 16 pt + resto a 12 pt.
+2. La **label** è ciò che precede il primo `:` (es. `OGGETTO:`, `Oggetto:`,
+   `Subject:`): preservata verbatim a 16 pt, il resto a 12 pt. **Nessuna label
+   viene inventata**: se il testo non ha `:`, tutto è reso a 12 pt grassetto.
 3. JUSTIFY se, rispettivamente, `subject_label_center == False` /
    `subject_content_center == True`.
 4. LEFT e grassetto-honor se `opening_formal == False` (registro e-mail);
    JUSTIFY + grassetto forzato se `opening_formal == True` (registro formale).
 5. `block.indent_cm` se specificato sulla singola voce, altrimenti
    `letter.list_indent_cm` (default 0.5 cm).
-6. `space_before`: 8 pt sulla **prima** riga della firma; 4 pt sulle righe nome;
-   nessuno sulle righe di sola firma `____`.
+6. `space_before`: **18** pt sulla prima riga del blocco (stacco dal corpo);
+   **2** pt sulla riga di sola firma `____` (aderisce al nome); **12** pt su un
+   nome che segue una riga di firma (nuovo firmatario → aria); **2** pt sulle
+   righe ruolo/denominazione (restano strette sotto il nome).
 
 ## 5. Regole speciali
 
@@ -100,10 +105,16 @@ Un blocco di corpo il cui testo combacia con `^\s*(?:\*\s*){2,}\*?\s*$`
 (es. `***`, `* * *`) viene **scartato**.
 
 ### 5.3 Riconoscimento righe di firma (`_emit_signature`)
-- riga di **sola firma** (solo caratteri `_`): `bold=False`, niente `space_before`;
+Tipi di riga e relativo grassetto/corsivo:
+- riga di **sola firma** (solo caratteri `_`): `bold=False`;
 - riga "(Firma digitale)" (contiene "firma digitale", case-insensitive):
   `italic=True`, `bold=False`;
 - ogni altra riga: `bold` honor-span (i nomi firmatari si passano in grassetto).
+
+Spaziatura (D3 — blocco arioso ed elegante): prima riga `space_before=18`
+(stacco); riga di firma `____` `space_before=2`, `space_after=8` (separa più
+firmatari); un nome che **segue** una riga di firma `space_before=12` (nuovo
+firmatario); righe ruolo/denominazione `space_before=2` (strette sotto il nome).
 
 ### 5.4 Unione appellativo di cortesia (`_merge_appellatives`)
 Attiva con `merge_courtesy_appellative == True` (default). Se una riga del
@@ -140,13 +151,10 @@ blocchi annidate (prodotte da `disposition`) sono appiattite da `_flatten_blocks
 
 ## 7. Validazione → `needs_review` (`collect_warnings`)
 
-Controlli **di forma** (non di merito giuridico). `RenderResult.needs_review`
-è `True` se la lista non è vuota:
-- `recipient_block` vuoto;
-- `subject` vuoto;
-- `signature_block` vuoto;
-- **data assente** (`date_place` None/vuoto): in resa compare `DATE_PLACEHOLDER`;
-- placeholder non risolti che combaciano con `[... DA INSERIRE | DATA | INSERIRE | ... | … ...]` (case-insensitive);
+Controlli **di forma** (non di merito giuridico) sul **solo testo fornito**: un
+blocco mancante NON è un errore (non si completa nulla), quindi non viene
+segnalato. `RenderResult.needs_review` è `True` se la lista non è vuota:
+- placeholder non risolti **lasciati dall'autore** che combaciano con `[... DA INSERIRE | DATA | INSERIRE | ... | … ...]` (case-insensitive);
 - en/em dash residuo **dopo** normalizzazione (difensivo: indica una variante non coperta da `normalize_text`);
 - divisore decorativo `***` presente (verrà comunque rimosso in resa).
 

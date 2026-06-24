@@ -48,10 +48,6 @@ LIST_INDENT_CM = 0.5           # default; corpus uses 0.5–1.0
 
 DEFAULT_TEMPLATE = "assets/Template_Vuoto.docx"
 
-# Written in the date position when no date is supplied, so the slot is always
-# present and the review path flags it (see collect_warnings).
-DATE_PLACEHOLDER = "[INSERISCI QUI LA DATA]"
-
 _AL = WD_ALIGN_PARAGRAPH
 
 # Tokens that mean "a human still has to fill this in".
@@ -163,15 +159,17 @@ class SubjectStyle(str, Enum):
 class LetterDocument:
     """Semantic content of one Bergamo Legal letter.
 
-    Fill the fields and pass to :func:`render_letter`. Empty/None optional
-    blocks are simply omitted from the output.
+    Fill the fields and pass to :func:`render_letter`. **Every block is
+    optional**: the formatter only renders what is supplied and never invents
+    or completes missing content (client rule: "si formatta solo cio che viene
+    mandato, mai completare"). Absent blocks are simply omitted.
     """
 
-    recipient_block: Sequence  # required: list of Line
-    subject: object            # required: str | Span | list[Span] (without/with "OGGETTO:")
-    opening: object            # required: Line
-    body_blocks: Sequence      # required: list of Block | str (str -> paragraph)
-    signature_block: Sequence  # required: list of Line
+    recipient_block: Sequence = field(default_factory=list)  # list of Line
+    subject: object = None     # str | Span | list[Span] (e.g. "OGGETTO: ...")
+    opening: object = None     # Line | None (salutation)
+    body_blocks: Sequence = field(default_factory=list)  # list of Block | str
+    signature_block: Sequence = field(default_factory=list)  # list of Line
     closing: object = None     # Line | None
     date_place: object = None  # Line | None
     delivery_method: object = None  # Line | None
@@ -378,7 +376,15 @@ def _emit_recipient(document: Document, letter: LetterDocument) -> None:
 def _emit_subject(document: Document, letter: LetterDocument) -> None:
     spans = _as_spans(letter.subject)
     raw = _plain(spans)
-    has_label = raw.strip().upper().startswith("OGGETTO")
+    if not raw.strip():
+        return  # nothing supplied -> nothing rendered (never invent a subject)
+
+    # The "label" is whatever the author wrote before the first colon (OGGETTO:,
+    # Oggetto:, Subject:, ...). It is preserved verbatim and rendered at 16pt;
+    # the rest at 12pt. No label is ever invented. If there is no colon, the
+    # whole subject is rendered at 12pt bold.
+    colon = raw.find(":")
+    label_len = colon + 1 if colon != -1 else 0
 
     if letter.subject_style is SubjectStyle.INLINE:
         # Single paragraph: label (16pt bold) + content (12pt bold).
@@ -387,29 +393,27 @@ def _emit_subject(document: Document, letter: LetterDocument) -> None:
         pf = para.paragraph_format
         pf.space_before = Pt(8)
         pf.space_after = Pt(8)
-        if has_label:
-            label, _, rest = raw.partition(":")
-            _add_run(para, normalize_text(label + ":"), size=SIZE_HEADING, bold=True)
+        if label_len:
+            _add_run(para, normalize_text(raw[:label_len]), size=SIZE_HEADING, bold=True)
+            rest = raw[label_len:]
             if rest:
                 _add_run(para, normalize_text(rest), size=SIZE_BODY, bold=True)
         else:
-            _add_run(para, "OGGETTO: ", size=SIZE_HEADING, bold=True)
             for s in spans:
                 _add_run(para, normalize_text(s.text), size=SIZE_BODY,
                          bold=True, italic=s.italic)
         return
 
-    # SPLIT style: "OGGETTO:" label line + content line.
-    _add_paragraph(
-        document, "OGGETTO:",
-        align=_AL.CENTER if letter.subject_label_center else _AL.JUSTIFY,
-        size=SIZE_HEADING, bold=True, space_before=10, space_after=4,
-        keep_with_next=True,
-    )
-    if has_label:
-        # strip the leading "OGGETTO:" from the provided content
-        idx = raw.find(":")
-        content_spans = _strip_label(spans, idx + 1)
+    # SPLIT style: label line + content line.
+    label_text = raw[:label_len] if label_len else None
+    if label_text:
+        _add_paragraph(
+            document, label_text,
+            align=_AL.CENTER if letter.subject_label_center else _AL.JUSTIFY,
+            size=SIZE_HEADING, bold=True, space_before=10, space_after=4,
+            keep_with_next=True,
+        )
+        content_spans = _strip_label(spans, label_len)
     else:
         content_spans = spans
     _add_paragraph(
@@ -501,18 +505,36 @@ def _emit_closing(document: Document, letter: LetterDocument) -> None:
 
 
 def _emit_signature(document: Document, letter: LetterDocument) -> None:
+    # Elegant, airy signature block (D3): the block opens with a clear gap from
+    # the body/closing; the signature rule "____" sits close under its name and
+    # leaves a gap below; a NEW signer (a line right after a rule) gets air above
+    # it; role/firm lines flow tight under the name they belong to.
+    prev_is_rule = False
     for i, line in enumerate(letter.signature_block):
         text = _plain(line)
         is_rule = bool(text) and set(text.strip()) <= {"_"}
         is_digital = "firma digitale" in text.lower()
+
+        if i == 0:
+            space_before = 18          # detach the whole block from what precedes
+        elif is_rule:
+            space_before = 2           # rule hugs the name above it
+        elif prev_is_rule:
+            space_before = 12          # a further signer starts here -> air above
+        else:
+            space_before = 2           # role/firm lines stay tight under the name
+
+        space_after = 8 if is_rule else 2   # gap below each signature line
+
         _add_paragraph(
             document, line, align=_AL.RIGHT, size=SIZE_BODY,
-            # STYLE_016: signer name lines bold; rule/role lines plain.
+            # STYLE_016: signer name lines bold; rule/role/digital lines plain.
             bold=False if (is_rule or is_digital) else None,
             italic=True if is_digital else None,
-            space_before=8 if i == 0 else (4 if not is_rule else None),
-            space_after=2,
+            space_before=space_before,
+            space_after=space_after,
         )
+        prev_is_rule = is_rule
 
 
 def _emit_attachments(document: Document, letter: LetterDocument) -> None:
@@ -539,19 +561,13 @@ def _emit_postscript(document: Document, letter: LetterDocument) -> None:
 # ---------------------------------------------------------------------------
 
 def collect_warnings(letter: LetterDocument) -> list[str]:
-    """Form-level (not legal) checks that set ``needs_review``."""
-    warnings: list[str] = []
+    """Form-level (not legal) checks that set ``needs_review``.
 
-    if not letter.recipient_block:
-        warnings.append("recipient_block vuoto (blocco obbligatorio).")
-    if not _plain(letter.subject).strip():
-        warnings.append("subject vuoto (blocco obbligatorio).")
-    if not letter.signature_block:
-        warnings.append("signature_block vuoto (blocco obbligatorio).")
-    if letter.date_place is None or not _plain(letter.date_place).strip():
-        warnings.append(
-            f"Data assente: inserire la data al posto di {DATE_PLACEHOLDER}."
-        )
+    The formatter never invents/completes content, so missing blocks are NOT an
+    error. These checks only flag issues in the text the author actually
+    supplied (placeholders they left, stray dashes, decorative dividers).
+    """
+    warnings: list[str] = []
 
     # Gather all text actually destined to the document.
     texts: list[str] = []
@@ -611,19 +627,18 @@ def render_letter(
     if letter.delivery_method is not None and not letter.delivery_inline_with_recipient:
         _emit_delivery(document, letter)
 
-    # The date is ALWAYS emitted; when missing it is filled with a placeholder
-    # so the slot exists and the review path (collect_warnings) flags it.
-    date_line = letter.date_place
-    if date_line is None or not _plain(date_line).strip():
-        date_line = DATE_PLACEHOLDER
+    # The date is rendered ONLY if supplied: the formatter never invents or
+    # completes a missing date (client rule "mai completare"). Email/PEC-style
+    # notes simply carry no date.
+    has_date = letter.date_place is not None and _plain(letter.date_place).strip()
+    if has_date and letter.date_above_recipient:
+        _emit_date(document, letter.date_place)
+    if letter.recipient_block:
+        _emit_recipient(document, letter)
+    if has_date and not letter.date_above_recipient:
+        _emit_date(document, letter.date_place)
 
-    if letter.date_above_recipient:
-        _emit_date(document, date_line)
-    _emit_recipient(document, letter)
-    if not letter.date_above_recipient:
-        _emit_date(document, date_line)
-
-    # --- subject / opening (opening is optional: formal istanze have none) ---
+    # --- subject / opening (both optional: rendered only if supplied) ---
     _emit_subject(document, letter)
     if _plain(letter.opening).strip():
         _emit_opening(document, letter)
@@ -631,13 +646,14 @@ def render_letter(
     # --- body ---
     _emit_body(document, letter)
 
-    # --- closing / signature / attachments / postscript ---
-    if letter.closing is not None:
+    # --- closing / signature / attachments / postscript (all optional) ---
+    if letter.closing is not None and _plain(letter.closing).strip():
         _emit_closing(document, letter)
-    _emit_signature(document, letter)
+    if letter.signature_block:
+        _emit_signature(document, letter)
     if letter.attachments:
         _emit_attachments(document, letter)
-    if letter.postscript is not None:
+    if letter.postscript is not None and _plain(letter.postscript).strip():
         _emit_postscript(document, letter)
 
     out_dir = os.path.dirname(output_path)
